@@ -33,46 +33,42 @@ class Arrow(pygame.sprite.Sprite):
         self.colour = colour
         self.arriveTime = arriveTime
         self.speed = speed
+        self.alive = 1
 
     def __calculatePosition(self, currentTime):
         self.x = screenWidth * (self.direction + 1) / 10
         self.y = screenHeight / 8 + (self.arriveTime - currentTime) * self.speed
     
-    #def __checkHit(self, hitTime, sensitivity):
-    #    if self.arriveTime - hitTime < -sensitivity:
-    #        return 0
-
-    #    keys = pygame.key.get_pressed()
-    #    
-    #    if not (pressedKeys[K_LEFT] and self.direction == 0):
-    #        return "miss"
-    #    if not (pressedKeys[K_UP] and self.direction == 1):
-    #        return "miss"
-    #    if not (pressedKeys[K_DOWN] and self.direction == 2):
-    #        return "miss"
-    #    if not (pressedKeys[K_RIGHT] and self.direction == 3):
-    #        return "miss"
-    #    # if hit correct direction, get points
-    #    if self.arriveTime - hitTime > 1:
-    #        return "miss"
-    #    elif self.arriveTime - hitTime <= sensitivity:
-    #        return (self.arriveTime - hitTime) / sensitivity
-    #    elif self.arriveTime - hitTime >= -sensitivity:
-    #        return (hitTime - self.arriveTime) / sensitivity
-            
     
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.colour, self.rect)
+    def __calculatePoints(self, currentTime):
+        if currentTime - self.arriveTime > sensitivity:
+            # this is a miss, points are 0
+            self.alive = 1
+        elif currentTime - self.arriveTime >= -sensitivity:
+            # this is a hit, points are maximal if
+            # current time - arrive time is small
+            self.alive = 0
 
-    def update(self):
+    def __calculateHit(self, currentTime, pressedKeys):
+        if pressedKeys[K_LEFT] and self.direction == 0:
+            self.__calculatePoints(currentTime)
+        if pressedKeys[K_UP] and self.direction == 1:
+            self.__calculatePoints(currentTime)
+        if pressedKeys[K_DOWN] and self.direction == 2:
+            self.__calculatePoints(currentTime)
+        if pressedKeys[K_RIGHT] and self.direction == 3:
+            self.__calculatePoints(currentTime)
+
+    def draw(self, screen):
+        if self.alive:
+            pygame.draw.rect(screen, self.colour, self.rect)
+
+    def update(self, pressedKeys):
         currentTime = pygame.time.get_ticks() / 1000
         self.__calculatePosition(currentTime)
         self.rect = (self.x, self.y, screenWidth/32, screenWidth/32)
-        #if self.speed != 0:
-        #    score = self.__checkHit(currentTime, sensitivity)
-        #    if score != "miss":
-        #        self.kill()
-        #        return score 
+        if self.alive and self.speed:
+            self.__calculateHit(currentTime, pressedKeys)
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -83,8 +79,8 @@ sensitivity = 0.1
 # [direction, rgb, arrive time, speed] 
 arrowData = [
         [0, (255, 0, 0), 0, 0],             # base arrows
-        [1, (0, 255, 0), 0, 0],
-        [2, (0, 255, 255), 0, 0],
+        [1, (0, 150, 0), 0, 0],
+        [2, (0, 0, 255), 0, 0],
         [3, (255, 255, 255), 0, 0],
         [0, (100, 100, 100), 3.1, speed],     # moving arrows
         [3, (100, 100, 100), 4.5, speed],
@@ -94,6 +90,7 @@ arrowData = [
              ]
 arrows = []
 
+# load arrow objects into arrows
 for item in arrowData:
     arrow = Arrow(item[0], item[1], item[2], item[3])
     arrows.append(arrow)
@@ -103,7 +100,7 @@ def updateObjects(arrows):
     pressedKeys = pygame.key.get_pressed()
     i = 0
     for arrow in arrows:
-        arrow.update()
+        arrow.update(pressedKeys)
 
 def updateScreen(screen, arrows):
     screen.fill((0, 0, 0))
