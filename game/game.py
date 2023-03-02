@@ -64,19 +64,17 @@ class Arrow(pygame.sprite.Sprite):
             pygame.draw.rect(screen, self.colour, self.rect)
 
     def update(self, pressedKeys):
-        if self.alive:
-            currentTime = pygame.time.get_ticks() / 1000
-            self.__calculatePosition(currentTime)
-            self.rect = (self.x, self.y, screenWidth/32, screenWidth/32)
-
-            if self.speed:
-                self.__calculateHit(currentTime, pressedKeys)
+        currentTime = pygame.time.get_ticks() / 1000
+        self.__calculatePosition(currentTime)
+        self.rect = (self.x, self.y, screenWidth/32, screenWidth/32)
+        if self.alive and self.speed:
+            self.__calculateHit(currentTime, pressedKeys)
 
 pygame.init()
 clock = pygame.time.Clock()
 fps = 60
 speed = 300
-sensitivity = 30 / speed
+sensitivity = 0.1
 
 # [direction, rgb, arrive time, speed] 
 arrowData = [
