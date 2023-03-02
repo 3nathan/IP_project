@@ -23,21 +23,21 @@ print('Server running on port ', port)
 
 #keep track of clients
 client_sockets = []
+scores = dict()
 
 def client_thread(clientsocket, addr):
     while True:
-        
-        score = 0 #get data from database
         data = clientsocket.recv(1024).decode()
-
         #handle data here
         if data:
-            score += 1
+            scores[addr] = scores.get(addr, 0) + 1
 
         #update database
 
 
         # send the data to the client
+        for client in client_sockets:
+            pass
         connection_socket.send(cmsg.encode())
     clientsocket.close()
 
