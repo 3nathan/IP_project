@@ -22,13 +22,14 @@ screen = pygame.display.set_mode([screenWidth, screenHeight])
 # 3: right
 
 class Arrow(pygame.sprite.Sprite):
-    def __init__(self, direction, arriveTime, speed, host, player, index, currentTime):
+    def __init__(self, direction, arriveTime, speed, host, player, index):
         self.x = 0
         self.y = 0
         self.direction = direction
         self.speed = speed
         self.host = host
         self.player = player
+        currentTime = pygame.time.get_ticks() / 1000
         self.arriveTime = arriveTime + currentTime
         # index used to tell which arrows have been hit for opponent
         self.index = index
@@ -154,12 +155,11 @@ arrows = []
 scores = []
 
 j = 0
-currentTime = pygame.time.get_ticks() / 1000
 for player in players:
     i = 0
     for item in arrowData:
         # i represents the arrow index, and j represents the player index
-        arrow = Arrow(item[0], item[1], item[2], player, j, i, currentTime)
+        arrow = Arrow(item[0], item[1], item[2], player, j, i)
         arrows.append(arrow)
         i += 1
     score = Score(j)
