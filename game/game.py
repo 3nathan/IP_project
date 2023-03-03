@@ -90,12 +90,13 @@ class Arrow(pygame.sprite.Sprite):
 
     # deadArrow is the list: [player, index] of an opponent arrow
     # that has been hit
-    def update(self, pressedKeys, deadArrow):
+    def update(self, pressedKeys, deadArrows):
         # if there is a dead arrow and its not the host arrow, kill the
         # correct arrow
-        if len(deadArrow) != 0:
+        for deadArrow in deadArrows:
             if self.player == deadArrow[0] and self.index == deadArrow[1]:
                 self.alive = 0
+
         if self.alive:
             currentTime = pygame.time.get_ticks() / 1000
             self.__calculatePosition(currentTime)
@@ -103,9 +104,11 @@ class Arrow(pygame.sprite.Sprite):
 
             if self.speed and self.host:
                 self.__calculateHit(currentTime, pressedKeys)
+                
                 if not self.alive:
                     return [self.player, self.index]
-        return []
+
+        return 0
 
 class Score():
     def __init__(self, player):
@@ -113,7 +116,7 @@ class Score():
         self.player = player
 
     #def draw(self, screen):
-        # draw self on screen above the base arrows
+        # draw score on screen above the base arrows
         # for each player
     
     # this funciton is only used until I get the graphical score
@@ -122,8 +125,8 @@ class Score():
     def __printScore(self):
         print("Player:", self.player, "score:", self.score)
 
-    def update(self, deadArrow):
-        if len(deadArrow) != 0:
+    def update(self, deadArrows):
+        for deadArrow in deadArrows:
             if deadArrow[0] == self.player:
                 self.score += 1
                 self.__printScore()
@@ -133,12 +136,12 @@ pygame.init()
 clock = pygame.time.Clock()
 fps = 60
 speed = 300
-sensitivity = 0.05
+sensitivity = 0.02
 # players list
 # the index represents the player and the
 # number (0 or 1) represents if the player is playing
 # on this machine
-players = [0, 1]
+players = [1]
 
 # [direction, arrive time, speed] 
 arrowData = [
@@ -170,12 +173,13 @@ def updateObjects(arrows):
     pressedKeys = pygame.key.get_pressed()
     # in final version, deadArrow will be sent by the server
     # from the opponent client
-    deadArrow = []
+    deadArrows = []
     for arrow in arrows:
-        deadArrow = arrow.update(pressedKeys, deadArrow)
-    for score in scores:
-        score.update(deadArrow)
-    # reset dead arrow once updated
+        deadArrow = arrow.update(pressedKeys, deadArrows)
+        if deadArrow:
+            deadArrows.append(deadArrow)
+
+    score.update(deadArrows)
 
 def updateScreen(screen, arrows):
     screen.fill((0, 0, 0))
