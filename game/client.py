@@ -75,10 +75,18 @@ def connect(self):
     except:
         pass
 #fuction that sends the data to the server and receives pickled data
-def send(self, data):
+def sendf(self, data):
     try:
         self.client.send(str.encode(data))
         return pickle.loads(self.client.recv(2048*2))
+    except socket.error as e:
+        print(e)
+def sendm(self, data):
+    try:
+        msg = data
+        self.client.send(msg.encode(data))
+        msg_received = self.client.recv(1024)
+        print("player 2" , msg_received.decode())
     except socket.error as e:
         print(e)
 
@@ -113,13 +121,16 @@ def main():
 
     while run:
         clock.tick(120)
+        #message version
+        sendm(score)
         #receives the data for the game 
         try:
-            game = send("get")
+            game = sendf("get")
         except:
             run = False
             print("Couldn't get game")
             break
+
     
         for event in pygame.event.get():
                 if event.type == KEYDOWN:
