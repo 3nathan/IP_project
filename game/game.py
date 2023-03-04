@@ -43,7 +43,7 @@ class Arrow(pygame.sprite.Sprite):
             self.colour = (200, 200, 200)
         # opponent arrow colouring
         elif self.speed:
-            self.colour = (150, 50, 50)
+            self.colour = (180, 20, 20)
         # base arrow colouring
         elif self.direction == 0:
             self.colour = (255, 0, 0)
@@ -55,10 +55,10 @@ class Arrow(pygame.sprite.Sprite):
             self.colour = (255, 255, 255)
 
     def __calculatePosition(self, currentTime):
-        self.x = screenWidth * (self.direction + 1) / 10 + screenWidth / 2 * (self.player % 2)
-        self.y = screenHeight / 8 + (self.arriveTime - currentTime) * self.speed
+        self.x = screenWidth * (self.direction + 1) / 10 + screenWidth / 2 * (self.player % 2) - screenWidth/32
+        self.y = screenHeight / 6 + (self.arriveTime - currentTime) * self.speed - screenWidth/32
         # screenWidth/32 is the length of one side of the arrow
-        if self.y > (0 - screenWidth/32) and self.y < screenHeight:
+        if self.y > (0 - screenWidth/16) and self.y < (screenHeight + screenWidth/16):
             self.visible = 1
         else:
             self.visible = 0
@@ -131,6 +131,17 @@ class Score():
                 self.score += 1
                 self.__printScore()
 
+def loadArrows(path):
+    f = open(path, 'r')
+    t = f.read()
+    t = t.split('\n')
+    t.remove('')
+    for i in range(len(t)):
+        t[i] = t[i].split(' ')
+        for j in range(3):
+            t[i][j] = float(t[i][j])
+
+    return t
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -141,19 +152,11 @@ sensitivity = 0.02
 # the index represents the player and the
 # number (0 or 1) represents if the player is playing
 # on this machine
-players = [1]
+players = [0, 1]
 
-# [direction, arrive time, speed] 
-arrowData = [
-        [0, 0, 0],             # base arrows
-        [1, 0, 0],
-        [2, 0, 0],
-        [3, 0, 0],
-        [0, 3.1, speed],     # moving arrows
-        [3, 3.5, speed],
-        [1, 4.1, speed],
-        [2, 4.5, speed],
-             ]
+# arrowData = [direction, arrive time, speed] 
+arrowData = loadArrows('test_arrows')
+
 arrows = []
 scores = []
 
@@ -187,7 +190,7 @@ def updateScreen(screen, arrows):
         arrow.draw(screen)
     pygame.display.update()
 
-def main():
+def gameLoop():
     running = True
     while running:
         for event in pygame.event.get():
@@ -204,4 +207,4 @@ def main():
     
     pygame.quit()
 
-main()
+gameLoop()
