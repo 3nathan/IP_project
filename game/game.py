@@ -55,7 +55,7 @@ class Arrow(pygame.sprite.Sprite):
             self.colour = (255, 255, 255)
 
     def __calculatePosition(self, currentTime):
-        self.x = screenWidth * (self.direction + 1) / 10 + screenWidth / 2 * (self.player % 2) - screenWidth/32
+        self.x = screenWidth * (self.direction + 1) / 10 + screenWidth / 2 * (self.player) - screenWidth/32
         self.y = screenHeight / 6 + (self.arriveTime - currentTime) * self.speed - screenWidth/32
         # screenWidth/32 is the length of one side of the arrow
         if self.y > (0 - screenWidth/16) and self.y < (screenHeight + screenWidth/16):
@@ -112,8 +112,8 @@ class Arrow(pygame.sprite.Sprite):
 
 class Score():
     def __init__(self, player):
-        self.score = 0
         self.player = player
+        self.score = 0
 
     #def draw(self, screen):
         # draw score on screen above the base arrows
@@ -123,7 +123,7 @@ class Score():
     # setup
     # for some reason this scoring is not setup
     def __printScore(self):
-        print("Player:", self.player, "score:", self.score)
+        print("player", self.player, "score:", self.score)
 
     def update(self, deadArrows):
         for deadArrow in deadArrows:
@@ -141,18 +141,18 @@ def loadArrows(path):
         for j in range(3):
             t[i][j] = float(t[i][j])
 
+    f.close()
     return t
 
 pygame.init()
 clock = pygame.time.Clock()
 fps = 60
-speed = 300
-sensitivity = 0.02
+sensitivity = 0.03
 # players list
 # the index represents the player and the
 # number (0 or 1) represents if the player is playing
 # on this machine
-players = [0, 1]
+players = [1, 0]
 
 # arrowData = [direction, arrive time, speed] 
 arrowData = loadArrows('test_arrows')
@@ -160,16 +160,12 @@ arrowData = loadArrows('test_arrows')
 arrows = []
 scores = []
 
-j = 0
-for player in players:
-    i = 0
-    for item in arrowData:
-        # i represents the arrow index, and j represents the player index
-        arrow = Arrow(item[0], item[1], item[2], player, j, i)
+for i in range(len(players)):
+    for j in range(len(arrowData)):
+        arrow = Arrow(arrowData[j][0], arrowData[j][1], arrowData[j][2], players[i], i, j)
         arrows.append(arrow)
-        i += 1
-    score = Score(j)
-    j += 1
+    score = Score(i)
+    scores.append(score)
 
 # a good arrow speed is ~200
 def updateObjects(arrows):
@@ -182,7 +178,8 @@ def updateObjects(arrows):
         if deadArrow:
             deadArrows.append(deadArrow)
 
-    score.update(deadArrows)
+    for score in scores:
+        score.update(deadArrows)
 
 def updateScreen(screen, arrows):
     screen.fill((0, 0, 0))
