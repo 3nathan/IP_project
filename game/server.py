@@ -45,4 +45,5 @@ def client_thread(clientsocket, addr):
 #Now the main server loop 
 while True:
     connection_socket, caddr = server_socket.accept() 
+    print("Connected to:", caddr) #Ana
     thread.start_new_thread(client_thread, (connection_socket, caddr))
