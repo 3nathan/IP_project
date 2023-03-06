@@ -134,18 +134,55 @@ class Score():
             if deadArrow[0] == self.player:
                 self.score += 1
 
-def loadArrows(path):
-    f = open(path, 'r')
-    t = f.read()
-    t = t.split('\n')
-    t.remove('')
-    for i in range(len(t)):
-        t[i] = t[i].split(' ')
-        for j in range(3):
-            t[i][j] = float(t[i][j])
+class Game():
+    def __init__(self, players, path, screen):
+        self.screen = screen
+        self.fps = 60
+        self.sensitivity = 0.03
+        self.players = players
+        self.path = path
+        self.__loadArrows()
+        self.__loadDataIntoGame()
 
-    f.close()
-    return t
+    def __loadArrows(self):
+        f = open(self.path, 'r')
+        self.arrowData = f.read()
+        self.arrowData = self.arrowData.split('\n')
+        self.arrowData.remove('')
+        for i in range(len(self.arrowData)):
+            self.arrowData[i] = self.arrowData[i].split(' ')
+            for j in range(3):
+                self.arrowData[i][j] = float(self.arrowData[i][j])
+    
+        f.close()
+
+    def __loadDataIntoGame(self):
+        self.arrows = []
+        self.scores = []
+        for i in range(len(players)):
+            for j in range(len(self.arrowData)):
+                arrow = Arrow(self.arrowData[j][0], self.arrowData[j][1], self.arrowData[j][2], players[i], i, j)
+                self.arrows.append(arrow)
+            score = Score(i)
+            self.scores.append(score)
+
+    def updateObjects(self):
+        pressedKeys = pygame.key.get_pressed()
+        deadArrows = []
+        for arrow in self.arrows:
+            deadArrow = arrow.update(pressedKeys, deadArrows)
+            if deadArrow:
+                deadArrows.append(deadArrow)
+        for score in self.scores:
+            score.update(deadArrows)
+
+    def updateScreen(self):
+        self.screen.fill((0, 0, 0))
+        for arrow in self.arrows:
+            arrow.draw(self.screen)
+        for score in self.scores:
+            score.draw(self.screen)
+        pygame.display.update()
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -155,42 +192,11 @@ sensitivity = 0.03
 # the index represents the player and the
 # number (0 or 1) represents if the player is playing
 # on this machine
-players = [0, 1]
+players = [1, 0]
 
 # arrowData = [direction, arrive time, speed] 
-arrowData = loadArrows('test_arrows')
 
-arrows = []
-scores = []
-
-for i in range(len(players)):
-    for j in range(len(arrowData)):
-        arrow = Arrow(arrowData[j][0], arrowData[j][1], arrowData[j][2], players[i], i, j)
-        arrows.append(arrow)
-    score = Score(i)
-    scores.append(score)
-
-# a good arrow speed is ~200
-def updateObjects(arrows):
-    pressedKeys = pygame.key.get_pressed()
-    # in final version, deadArrow will be sent by the server
-    # from the opponent client
-    deadArrows = []
-    for arrow in arrows:
-        deadArrow = arrow.update(pressedKeys, deadArrows)
-        if deadArrow:
-            deadArrows.append(deadArrow)
-
-    for score in scores:
-        score.update(deadArrows)
-
-def updateScreen(screen, arrows):
-    screen.fill((0, 0, 0))
-    for arrow in arrows:
-        arrow.draw(screen)
-    for score in scores:
-        score.draw(screen)
-    pygame.display.update()
+game = Game(players, 'test_arrows', screen)
 
 def gameLoop():
     running = True
@@ -202,8 +208,8 @@ def gameLoop():
             elif event.type == pygame.QUIT:
                 running = False
     
-        updateObjects(arrows)
-        updateScreen(screen, arrows)
+        game.updateObjects()
+        game.updateScreen()
     
         clock.tick(fps)
     
