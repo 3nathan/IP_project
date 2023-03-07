@@ -22,13 +22,13 @@ screen = pygame.display.set_mode([screenWidth, screenHeight])
 # 3: right
 
 class Arrow(pygame.sprite.Sprite):
-    def __init__(self, direction, arriveTime, speed, host, player, index):
+    def __init__(self, direction, arriveTime, speed, playerData, playerNumber, index):
         self.x = 0
         self.y = 0
         self.direction = direction
         self.speed = speed
-        self.host = host
-        self.player = player
+        self.host = playerData[1]
+        self.player = playerNumber
         currentTime = pygame.time.get_ticks() / 1000
         self.arriveTime = arriveTime + currentTime
         # index used to tell which arrows have been hit for opponent
@@ -139,9 +139,12 @@ class Score():
 
 #class Menu():
 #    def __init__(self):
-#        self.text = [
-#                'Play',
-#                'Songs'
+#    
+#    def __lobby(self):
+#        #get ready and players data from server
+#        ready = [1, 0]
+#        players = ['Player 1 name', 'Player 2 name']
+#        for 
 
 
 
@@ -153,10 +156,10 @@ class Game():
         self.players = players
         self.path = path
         self.running = 1
-        self.__loadArrows()
-        self.__loadDataIntoGame()
+        self.__getData()
+        self.__loadData()
 
-    def __loadArrows(self):
+    def __getData(self):
         f = open(self.path, 'r')
         self.arrowData = f.read()
         self.arrowData = self.arrowData.split('\n')
@@ -168,11 +171,12 @@ class Game():
     
         f.close()
 
-    def __loadDataIntoGame(self):
+    def __loadData(self):
         self.arrows = []
         self.scores = []
         for i in range(len(self.players)):
             for j in range(len(self.arrowData)):
+                # Arrow arguements (direction, arriveTime, speed, playerData, playerNumber, index)
                 arrow = Arrow(self.arrowData[j][0], self.arrowData[j][1], self.arrowData[j][2], self.players[i], i, j)
                 self.arrows.append(arrow)
             score = Score(i)
@@ -209,10 +213,11 @@ clock = pygame.time.Clock()
 fps = 60
 sensitivity = 0.03
 # players list
-# the index represents the player and the
-# number (0 or 1) represents if the player is playing
-# on this machine
-players = [0, 1]
+# the index represents the player number
+# the string represents the player name
+# the number 1 or 0 represents if the player is playing
+# on this machine or not respectively
+players = [['player 1 name', 0], ['player 2 name', 1]]
 
 # arrowData = [direction, arrive time, speed] 
 
