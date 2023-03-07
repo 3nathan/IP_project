@@ -84,6 +84,9 @@ class Arrow(pygame.sprite.Sprite):
         if pressedKeys[K_RIGHT] and self.direction == 3:
             self.__calculatePoints(currentTime)
 
+    def isAlive(self):
+        return self.alive
+
     def draw(self, screen):
         if self.alive and self.visible:
             pygame.draw.rect(screen, self.colour, self.rect)
@@ -134,6 +137,14 @@ class Score():
             if deadArrow[0] == self.player:
                 self.score += 1
 
+#class Menu():
+#    def __init__(self):
+#        self.text = [
+#                'Play',
+#                'Songs'
+
+
+
 class Game():
     def __init__(self, players, path, screen):
         self.screen = screen
@@ -141,6 +152,7 @@ class Game():
         self.sensitivity = 0.03
         self.players = players
         self.path = path
+        self.running = 1
         self.__loadArrows()
         self.__loadDataIntoGame()
 
@@ -159,12 +171,19 @@ class Game():
     def __loadDataIntoGame(self):
         self.arrows = []
         self.scores = []
-        for i in range(len(players)):
+        for i in range(len(self.players)):
             for j in range(len(self.arrowData)):
-                arrow = Arrow(self.arrowData[j][0], self.arrowData[j][1], self.arrowData[j][2], players[i], i, j)
+                arrow = Arrow(self.arrowData[j][0], self.arrowData[j][1], self.arrowData[j][2], self.players[i], i, j)
                 self.arrows.append(arrow)
             score = Score(i)
             self.scores.append(score)
+
+    # this should be 5-10 seconds after the song ends
+    # not after the las arrow has passed
+    #def __isGameRunning(self):
+    #    lastArrow = self.arrows[len(self.arrows)-1]
+    #    if not lastArrow.isAlive():
+    #        self.running = 0
 
     def updateObjects(self):
         pressedKeys = pygame.key.get_pressed()
@@ -184,6 +203,7 @@ class Game():
             score.draw(self.screen)
         pygame.display.update()
 
+
 pygame.init()
 clock = pygame.time.Clock()
 fps = 60
@@ -192,7 +212,7 @@ sensitivity = 0.03
 # the index represents the player and the
 # number (0 or 1) represents if the player is playing
 # on this machine
-players = [1, 0]
+players = [0, 1]
 
 # arrowData = [direction, arrive time, speed] 
 
@@ -204,8 +224,10 @@ def gameLoop():
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE or event.key == K_q:
+                    # send quit message to server
                     running = False
             elif event.type == pygame.QUIT:
+                # send quit message to server
                 running = False
     
         game.updateObjects()
