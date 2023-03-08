@@ -114,8 +114,9 @@ class Arrow(pygame.sprite.Sprite):
         return 0
 
 class Score():
-    def __init__(self, player):
-        self.player = player
+    def __init__(self, playerName, playerNumber):
+        self.playerNumber = playerNumber
+        self.playerName = playerName
         self.score = 0
         self.font = pygame.font.SysFont('Ariel', 35)
 
@@ -123,18 +124,14 @@ class Score():
         # draw score on screen above the base arrows
         # for each player
     def draw(self, screen):
-        text = self.font.render("Score: " + str(self.score), False, (255, 255, 255))
-        screen.blit(text, (screenWidth / 16 + screenWidth / 2 * self.player, screenHeight / 16))
+        x = screenWidth / 15 + screenWidth / 2 * self.playerNumber
+        y = screenHeight / 18
+        text = self.font.render(self.playerName + " score: " + str(self.score), False, (255, 255, 255))
+        screen.blit(text, (x, y))
     
-    # this funciton is only used until I get the graphical score
-    # setup
-    # for some reason this scoring is not setup
-    def __printScore(self):
-        print("player", self.player, "score:", self.score)
-
     def update(self, deadArrows):
         for deadArrow in deadArrows:
-            if deadArrow[0] == self.player:
+            if deadArrow[0] == self.playerNumber:
                 self.score += 1
 
 #class Menu():
@@ -179,7 +176,7 @@ class Game():
                 # Arrow arguements (direction, arriveTime, speed, playerData, playerNumber, index)
                 arrow = Arrow(self.arrowData[j][0], self.arrowData[j][1], self.arrowData[j][2], self.players[i], i, j)
                 self.arrows.append(arrow)
-            score = Score(i)
+            score = Score(self.players[i][0], i)
             self.scores.append(score)
 
     # this should be 5-10 seconds after the song ends
@@ -217,7 +214,7 @@ sensitivity = 0.03
 # the string represents the player name
 # the number 1 or 0 represents if the player is playing
 # on this machine or not respectively
-players = [['player 1 name', 0], ['player 2 name', 1]]
+players = [['Player 1', 0], ['Player 2', 1]]
 
 # arrowData = [direction, arrive time, speed] 
 
