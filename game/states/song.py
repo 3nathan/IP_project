@@ -1,6 +1,7 @@
 import pygame
 from states.state import State
-from objects.objects import *
+from objects.arrow import Arrow
+from objects.score import Score
 
 class Song(State):
     def __init__(self, game):
@@ -32,10 +33,10 @@ class Song(State):
         for i in range(len(self.players)):
             for j in range(len(self.arrowData)):
                 # Arrow arguments (direction, arriveTime, speed, sensitivity, playerData, playerNumber, index, screenWidth, screenHeight)
-                arrow = Arrow(self.arrowData[j][0], self.arrowData[j][1], self.arrowData[j][2], self.sensitivity, self.players[i], i, j, self.game.screenWidth, self.game.screenHeight)
+                arrow = Arrow(i, j, self.game, self)
                 self.arrows.append(arrow)
             # Score arguments (playerName, playerNumber, screenWidth, screenHeight)
-            score = Score(self.players[i][0], i, self.game.screenWidth, self.game.screenHeight)
+            score = Score(i, self.game, self)
             self.scores.append(score)
 
     def updateObjects(self, pressedKeys):

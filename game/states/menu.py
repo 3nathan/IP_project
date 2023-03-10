@@ -7,10 +7,10 @@ class Menu(State):
         State.__init__(self, game)
 
     def updateObjects(self, pressedKeys):
+        # enter song state upon user pressing return
         if pressedKeys[K_RETURN]:
             newState = Song(self.game)
             newState.enterState()
-        pass
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
