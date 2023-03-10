@@ -49,7 +49,7 @@ class Arrow(pygame.sprite.Sprite):
         else:
             self.visible = 0
     
-    def __calculatePoints(self, currentTime):
+    def __calculateScore(self, currentTime):
         if currentTime - self.arriveTime > self.sensitivity:
             # this is a miss, points are 0
             # could also use this to decrease the score
@@ -62,13 +62,13 @@ class Arrow(pygame.sprite.Sprite):
 
     def __calculateHit(self, currentTime, pressedKeys):
         if pressedKeys[K_LEFT] and self.direction == 0:
-            self.__calculatePoints(currentTime)
+            self.__calculateScore(currentTime)
         if pressedKeys[K_UP] and self.direction == 1:
-            self.__calculatePoints(currentTime)
+            self.__calculateScore(currentTime)
         if pressedKeys[K_DOWN] and self.direction == 2:
-            self.__calculatePoints(currentTime)
+            self.__calculateScore(currentTime)
         if pressedKeys[K_RIGHT] and self.direction == 3:
-            self.__calculatePoints(currentTime)
+            self.__calculateScore(currentTime)
 
     def isAlive(self):
         return self.alive

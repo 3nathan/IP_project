@@ -1,56 +1,18 @@
 import pygame
-from objects import *
+from states.menu import Menu
 from pygame.locals import *
 
-#class Menu():
-#    def __init__(self):
-#    
-#    def __lobby(self):
-#        #get ready and players data from server
-#        ready = [1, 0]
-#        players = ['Player 1 name', 'Player 2 name']
-#        for 
-
-
-
 class Game():
-    def __init__(self, players, path):
+    def __init__(self):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.screenWidth = 1280
         self.screenHeight = 720
         self.screen = pygame.display.set_mode([self.screenWidth, self.screenHeight])
         self.fps = 60
-        self.sensitivity = 0.03
         self.running = True
-        self.players = players
-        self.path = path
-        self.running = 1
-        self.__getData()
-        self.__loadData()
-
-    def __getData(self):
-        f = open(self.path, 'r')
-        self.arrowData = f.read()
-        self.arrowData = self.arrowData.split('\n')
-        self.arrowData.remove('')
-        for i in range(len(self.arrowData)):
-            self.arrowData[i] = self.arrowData[i].split(' ')
-            for j in range(3):
-                self.arrowData[i][j] = float(self.arrowData[i][j])
-    
-        f.close()
-
-    def __loadData(self):
-        self.arrows = []
-        self.scores = []
-        for i in range(len(self.players)):
-            for j in range(len(self.arrowData)):
-                # Arrow arguements (direction, arriveTime, speed, sensitivity, playerData, playerNumber, index)
-                arrow = Arrow(self.arrowData[j][0], self.arrowData[j][1], self.arrowData[j][2], self.sensitivity, self.players[i], i, j, self.screenWidth, self.screenHeight)
-                self.arrows.append(arrow)
-            score = Score(self.players[i][0], i, self.screenWidth, self.screenHeight)
-            self.scores.append(score)
+        self.stateStack = []
+        self.__loadStates()
 
     # this should be 5-10 seconds after the song ends
     # not after the las arrow has passed
@@ -69,21 +31,27 @@ class Game():
 
     def __updateObjects(self):
         pressedKeys = pygame.key.get_pressed()
-        deadArrows = []
-        for arrow in self.arrows:
-            deadArrow = arrow.update(pressedKeys, deadArrows)
-            if deadArrow:
-                deadArrows.append(deadArrow)
-        for score in self.scores:
-            score.update(deadArrows)
+        #deadArrows = []
+        #for arrow in self.arrows:
+        #    deadArrow = arrow.update(pressedKeys, deadArrows)
+        #    if deadArrow:
+        #        deadArrows.append(deadArrow)
+        #for score in self.scores:
+        #    score.update(deadArrows)
+        self.stateStack[-1].updateObjects(pressedKeys)
 
     def __updateScreen(self):
-        self.screen.fill((0, 0, 0))
-        for arrow in self.arrows:
-            arrow.draw(self.screen)
-        for score in self.scores:
-            score.draw(self.screen)
-        pygame.display.update()
+        #self.screen.fill((0, 0, 0))
+        #for arrow in self.arrows:
+        #    arrow.draw(self.screen)
+        #for score in self.scores:
+        #    score.draw(self.screen)
+        #pygame.display.update()
+        self.stateStack[-1].updateScreen()
+
+    def __loadStates(self):
+        self.menu = Menu(self)
+        self.stateStack.append(self.menu)
 
     def gameLoop(self):
         while self.running:
@@ -103,6 +71,6 @@ players = [['Player 1', 0], ['Player 2', 1]]
 
 # arrowData = [direction, arrive time, speed] 
 
-game = Game(players, 'test_arrows')
+game = Game()
 
 game.gameLoop()
