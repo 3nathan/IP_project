@@ -27,10 +27,13 @@ class Button():
 
         # button is active if it has been clicked, and it is made 'unactive' if a different area has been clicked
         mouseOnButton = (self.x - self.width/2 < pos[0]) and (self.x + self.width/2 > pos[0]) and (self.y - self.height/2 < pos[1]) and (self.y + self.height/2 > pos[1])
+        if self.active and not pressed[0]:
+            return 1
         if pressed[0]:
             if mouseOnButton:
                 self.active = 1
             else:
                 self.active = 0
 
-        return self.active
+
+        return 0
