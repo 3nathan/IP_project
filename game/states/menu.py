@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 from states.state import State
 from states.song import Song
 from objects.button import Button
@@ -9,9 +8,9 @@ class Menu(State):
         State.__init__(self, game)
         buttonX = self.game.screenWidth/2
         buttonY = self.game.screenHeight*3/5
-        buttonWidth = self.game.screenWidth/3
-        buttonHeight = self.game.screenHeight/6
-        self.button = Button(game, 'Go to song', buttonX, buttonY, buttonWidth, buttonHeight)
+        buttonWidth = self.game.screenWidth/4
+        buttonHeight = self.game.screenHeight/7
+        self.button = Button(game, 'Go to song', buttonX, buttonY, buttonWidth, buttonHeight, 50)
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return

@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 class Button():
-    def __init__(self, game, text, x, y, width, height, colour = (50, 50, 200), size = 80):
+    def __init__(self, game, text, x, y, width, height, size = 80, colour = (50, 50, 200)):
         self.game = game
         self.text = text
         self.x = x
