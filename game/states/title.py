@@ -9,9 +9,9 @@ class Title(State):
         State.__init__(self, game)
         buttonX = self.game.screenWidth/2
         buttonY = self.game.screenHeight*3/5
-        buttonWidth = self.game.screenWidth/4
-        buttonHeight = self.game.screenHeight/4
-        self.button = Button(game, 'Enter', buttonX, buttonY, buttonWidth, buttonHeight)
+        buttonWidth = self.game.screenWidth/3
+        buttonHeight = self.game.screenHeight/6
+        self.button = Button(game, 'Go to menu', buttonX, buttonY, buttonWidth, buttonHeight)
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return
