@@ -2,12 +2,11 @@ import pygame
 from pygame.locals import *
 
 class Arrow():
-    def __init__(self, playerNumber, index, game, song):
+    def __init__(self, playerNumber, index, game, song, currentTime):
         self.game = game
         self.song = song
         self.x = 0
         self.y = 0
-        currentTime = pygame.time.get_ticks() / 1000
         self.direction = self.song.arrowData[index][0]
         self.arriveTime = self.song.arrowData[index][1] + currentTime
         self.speed = self.song.arrowData[index][2]
@@ -79,7 +78,7 @@ class Arrow():
 
     # deadArrow is the list: [player, index] of an opponent arrow
     # that has been hit
-    def update(self, pressedKeys, deadArrows):
+    def update(self, pressedKeys, deadArrows, currentTime):
         # if there is a dead arrow and its not the host arrow, kill the
         # correct arrow
         for deadArrow in deadArrows:
@@ -87,7 +86,6 @@ class Arrow():
                 self.alive = 0
 
         if self.alive:
-            currentTime = pygame.time.get_ticks() / 1000
             self.__calculatePosition(currentTime)
 
             if self.speed and self.host:

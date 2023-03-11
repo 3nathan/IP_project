@@ -1,3 +1,4 @@
+import pygame
 from pygame.locals import *
 from states.state import State
 from states.song import Song
@@ -15,3 +16,4 @@ class Menu(State):
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
         # finish this by displaying the players' names and if they are ready
+        pygame.display.update()

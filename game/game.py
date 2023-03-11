@@ -1,5 +1,5 @@
 import pygame
-from states.menu import Menu
+from states.title import Title
 from pygame.locals import *
 
 class Game():
@@ -50,8 +50,8 @@ class Game():
         self.stateStack[-1].updateScreen()
 
     def __loadStates(self):
-        self.menu = Menu(self)
-        self.stateStack.append(self.menu)
+        self.title = Title(self)
+        self.stateStack.append(self.title)
 
     def gameLoop(self):
         while self.running:

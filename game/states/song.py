@@ -30,10 +30,11 @@ class Song(State):
     def __loadData(self):
         self.arrows = []
         self.scores = []
+        currentTime = pygame.time.get_ticks()/1000
         for i in range(len(self.players)):
             for j in range(len(self.arrowData)):
                 # Arrow arguments (direction, arriveTime, speed, sensitivity, playerData, playerNumber, index, screenWidth, screenHeight)
-                arrow = Arrow(i, j, self.game, self)
+                arrow = Arrow(i, j, self.game, self, currentTime)
                 self.arrows.append(arrow)
             # Score arguments (playerName, playerNumber, screenWidth, screenHeight)
             score = Score(i, self.game, self)
@@ -41,8 +42,9 @@ class Song(State):
 
     def updateObjects(self, pressedKeys):
         deadArrows = []
+        currentTime = pygame.time.get_ticks()/1000
         for arrow in self.arrows:
-            deadArrow = arrow.update(pressedKeys, deadArrows)
+            deadArrow = arrow.update(pressedKeys, deadArrows, currentTime)
             if deadArrow:
                 deadArrows.append(deadArrow)
         for score in self.scores:
