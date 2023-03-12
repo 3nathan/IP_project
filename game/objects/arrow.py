@@ -2,15 +2,15 @@ import pygame
 from pygame.locals import *
 
 class Arrow():
-    def __init__(self, playerNumber, index, game, song, currentTime):
+    def __init__(self, playerNumber, index, game, state, currentTime):
         self.game = game
-        self.song = song
+        self.state = state
         self.x = 0
         self.y = 0
-        self.direction = self.song.arrowData[index][0]
-        self.arriveTime = self.song.arrowData[index][1] + currentTime
-        self.speed = self.song.arrowData[index][2]
-        self.host = self.song.players[playerNumber][1]
+        self.direction = self.state.arrowData[index][0]
+        self.arriveTime = self.state.arrowData[index][1] + currentTime
+        self.speed = self.state.arrowData[index][2]
+        self.host = self.state.players[playerNumber][1]
         self.player = playerNumber
         # index used to tell which arrows have been hit for opponent
         self.index = index
@@ -48,12 +48,12 @@ class Arrow():
             self.visible = 0
     
     def __calculateScore(self, currentTime):
-        if currentTime - self.arriveTime > self.song.sensitivity:
+        if currentTime - self.arriveTime > self.state.sensitivity:
             # this is a miss, points are 0
             # could also use this to decrease the score
             # because it is a miss
             self.alive = 1
-        elif currentTime - self.arriveTime >= -self.song.sensitivity:
+        elif currentTime - self.arriveTime >= -self.state.sensitivity:
             # this is a hit, points are maximal if
             # current time - arrive time is small
             self.alive = 0

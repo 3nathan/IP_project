@@ -16,6 +16,9 @@ class Button():
         self.font = pygame.font.SysFont('arielblack', self.size)
         self.rect = (self.x - self.width/2, self.y - self.height/2, self.width, self.height)
 
+    def __invertColour(self):
+        self.colour = (255 - self.colour[0], 255 - self.colour[1], 255 - self.colour[2])
+
     def draw(self):
         pygame.draw.rect(self.game.screen, self.colour, self.rect)
         text = self.font.render(self.text, False, (255, 255, 255))
@@ -27,13 +30,22 @@ class Button():
 
         # button is active if it has been clicked, and it is made 'unactive' if a different area has been clicked
         mouseOnButton = (self.x - self.width/2 < pos[0]) and (self.x + self.width/2 > pos[0]) and (self.y - self.height/2 < pos[1]) and (self.y + self.height/2 > pos[1])
+
+        # only do the action when the button is released
         if self.active and not pressed[0]:
-            return 1
-        if pressed[0]:
-            if mouseOnButton:
-                self.active = 1
-            else:
-                self.active = 0
+            action = 1
+        else:
+            action = 0
+            
+        # if LMB is pressed and cursor on button, then the button is active
+        # on button state change, the colour of the button inverts
+        if pressed[0] and mouseOnButton:
+            if not self.active:
+                self.__invertColour()
+            self.active = 1
+        else:
+            if self.active:
+                self.__invertColour()
+            self.active = 0
 
-
-        return 0
+        return action
