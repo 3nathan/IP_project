@@ -25,4 +25,5 @@ class InputText():
 
     def update(self):
         self.__getInput()
+        print(self.text)
         return self.text

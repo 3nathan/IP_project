@@ -27,6 +27,7 @@ class Title(State):
         self.inputTextX = buttonX
         self.inputTextY = self.game.screenHeight*4/7
         self.inputText = InputText(game, self.inputTextX, self.inputTextY, 40)
+        self.text = ''
 
     def __titleText(self):
         titleText = self.titleFont.render(self.titleText, False, (255, 255, 255))
@@ -38,10 +39,12 @@ class Title(State):
         pass
 
     def updateObjects(self, pressedKeys):
-        self.inputText.update()
-        # enter song state upon user pressing return
+        self.text = self.inputText.update()
+
         pressed = self.button.update()
         if pressed:
+        # enter menu state upon user pressing return
+        # and send self.text (player name) to the server
             newState = Menu(self.game)
             newState.enterState()
 

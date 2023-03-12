@@ -11,6 +11,7 @@ class Menu(State):
         buttonWidth = self.game.screenWidth/5
         buttonHeight = self.game.screenHeight/8
         self.button = Button(game, 'Go to song', buttonX, buttonY, buttonWidth, buttonHeight, 50)
+        # get players from the server
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return

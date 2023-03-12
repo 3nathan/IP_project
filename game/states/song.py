@@ -7,9 +7,9 @@ class Song(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.sensitivity = 0.03
-        #self.players = players
+        # get players from server
         self.players = [['Player 1', 1], ['Player 2', 0]]
-        #self.path = path
+        # get path from the server
         self.path = 'test_arrows'
         self.__getData()
         self.__loadData()
