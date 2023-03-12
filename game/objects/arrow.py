@@ -15,6 +15,7 @@ class Arrow():
         # index used to tell which arrows have been hit for opponent
         self.index = index
         self.alive = 1
+        self.miss = 0
         self.visible = 0
         self.__determineColour()
 
@@ -47,26 +48,31 @@ class Arrow():
         else:
             self.visible = 0
     
-    def __calculateScore(self, currentTime):
-        if currentTime - self.arriveTime > self.state.sensitivity:
-            # this is a miss, points are 0
-            # could also use this to decrease the score
-            # because it is a miss
-            self.alive = 1
-        elif currentTime - self.arriveTime >= -self.state.sensitivity:
-            # this is a hit, points are maximal if
-            # current time - arrive time is small
-            self.alive = 0
+    #def __calculateScore(self, currentTime):
+    #    if currentTime - self.arriveTime > self.state.sensitivity:
+    #        # this is a miss, points are 0
+    #        # could also use this to decrease the score
+    #        # because it is a miss
+    #        self.miss = 1
+    #    elif currentTime - self.arriveTime >= -self.state.sensitivity:
+    #        # this is a hit, points are maximal if
+    #        # current time - arrive time is small
+    #        self.alive = 0
 
     def __calculateHit(self, currentTime, pressedKeys):
-        if pressedKeys[K_LEFT] and self.direction == 0:
-            self.__calculateScore(currentTime)
-        if pressedKeys[K_UP] and self.direction == 1:
-            self.__calculateScore(currentTime)
-        if pressedKeys[K_DOWN] and self.direction == 2:
-            self.__calculateScore(currentTime)
-        if pressedKeys[K_RIGHT] and self.direction == 3:
-            self.__calculateScore(currentTime)
+        if currentTime - self.arriveTime > self.state.sensitivity:
+            self.miss = 1
+
+        elif currentTime - self.arriveTime >= -self.state.sensitivity:
+            if pressedKeys[K_LEFT] and self.direction == 0:
+                self.alive = 0
+            if pressedKeys[K_UP] and self.direction == 1:
+                self.alive = 0
+            if pressedKeys[K_DOWN] and self.direction == 2:
+                self.alive = 0
+            if pressedKeys[K_RIGHT] and self.direction == 3:
+                self.alive = 0
+
 
     def isAlive(self):
         return self.alive
@@ -92,6 +98,9 @@ class Arrow():
                 self.__calculateHit(currentTime, pressedKeys)
                 
                 if not self.alive:
-                    return [self.player, self.index]
+                    # 3rd index 1 if hit, 0 if miss
+                    return [self.player, self.index, 1]
+                elif self.miss:
+                    return [self.player, self.index, 0]
 
         return 0

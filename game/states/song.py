@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 from states.state import State
 from objects.arrow import Arrow
 from objects.score import Score
@@ -41,14 +42,20 @@ class Song(State):
             self.scores.append(score)
 
     def updateObjects(self, pressedKeys):
+        # change this when integrating the server
         deadArrows = []
+        missedArrows = []
         currentTime = pygame.time.get_ticks()/1000
         for arrow in self.arrows:
-            deadArrow = arrow.update(pressedKeys, deadArrows, currentTime)
-            if deadArrow:
-                deadArrows.append(deadArrow)
+            arrowData = arrow.update(pressedKeys, deadArrows, currentTime)
+            if arrowData:
+                if arrowData[2] == 1:
+                    deadArrows.append(arrowData[:-1])
+                else:
+                    missedArrows.append(arrowData[:-1])
+        # change this when integrating the server
         for score in self.scores:
-            score.update(deadArrows)
+            score.update(deadArrows, missedArrows)
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
