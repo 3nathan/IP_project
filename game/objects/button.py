@@ -22,7 +22,7 @@ class Button():
     def draw(self):
         pygame.draw.rect(self.game.screen, self.colour, self.rect)
         text = self.font.render(self.text, False, (255, 255, 255))
-        self.game.screen.blit(text, ((self.x - len(self.text)*self.size/5), (self.y - self.size/3.5)))
+        self.game.screen.blit(text, ((self.x - len(self.text)*self.size*11/60), (self.y - self.size/3.5)))
 
     def update(self):
         pos = pygame.mouse.get_pos()

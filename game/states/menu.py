@@ -7,9 +7,9 @@ class Menu(State):
     def __init__(self, game):
         State.__init__(self, game)
         buttonX = self.game.screenWidth/2
-        buttonY = self.game.screenHeight*3/5
-        buttonWidth = self.game.screenWidth/4
-        buttonHeight = self.game.screenHeight/7
+        buttonY = self.game.screenHeight*5/7
+        buttonWidth = self.game.screenWidth/5
+        buttonHeight = self.game.screenHeight/8
         self.button = Button(game, 'Go to song', buttonX, buttonY, buttonWidth, buttonHeight, 50)
 
     def updateObjects(self, pressedKeys):
