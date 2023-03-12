@@ -15,7 +15,8 @@ class Game():
         self.__loadStates()
 
     def __updateEvents(self):
-        for event in pygame.event.get():
+        self.events = pygame.event.get()
+        for event in self.events:
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     # send quit message to the server

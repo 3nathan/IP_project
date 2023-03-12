@@ -7,22 +7,35 @@ from objects.input_text import InputText
 class Title(State):
     def __init__(self, game):
         State.__init__(self, game)
+
         buttonX = self.game.screenWidth/2
         buttonY = self.game.screenHeight*5/7
         buttonWidth = self.game.screenWidth/5
         buttonHeight = self.game.screenHeight/8
         self.button = Button(game, 'Go to menu', buttonX, buttonY, buttonWidth, buttonHeight, 50)
+        
         self.titleFont = pygame.font.SysFont('arielblack', 100)
         self.titleText = 'FPGA Rhythm Game'
         self.titleX = self.game.screenWidth/2 - len(self.titleText)*20
         self.titleY = self.game.screenHeight/4 - 30
+
+        self.subTitleFont = pygame.font.SysFont('arielblack', 50)
+        self.subTitleText = 'Enter your name:'
+        self.subTitleX = self.game.screenWidth/2 - len(self.titleText)*9
+        self.subTitleY = self.game.screenHeight*2/5 - 30
+
         self.inputTextX = buttonX
-        self.inputTextY = self.game.screenHeight/3
-        self.inputText = InputText(game, self.inputTextX, self.inputTextY)
+        self.inputTextY = self.game.screenHeight*4/7
+        self.inputText = InputText(game, self.inputTextX, self.inputTextY, 40)
 
     def __titleText(self):
-        text = self.titleFont.render(self.titleText, False, (255, 255, 255))
-        self.game.screen.blit(text, (self.titleX, self.titleY))
+        titleText = self.titleFont.render(self.titleText, False, (255, 255, 255))
+        subTitleText = self.subTitleFont.render(self.subTitleText, False, (255, 255, 255))
+        self.game.screen.blit(titleText, (self.titleX, self.titleY))
+        self.game.screen.blit(subTitleText, (self.subTitleX, self.subTitleY))
+    
+    def updateEvents():
+        pass
 
     def updateObjects(self, pressedKeys):
         self.inputText.update()
