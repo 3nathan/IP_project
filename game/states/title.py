@@ -43,6 +43,7 @@ class Title(State):
 
         pressed = self.button.update()
         if pressed:
+            print('Player name:', self.text)
         # enter menu state upon user pressing return
         # and send self.text (player name) to the server
             newState = Menu(self.game)
