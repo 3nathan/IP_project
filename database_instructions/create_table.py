@@ -8,19 +8,23 @@ def create_score_table(dynamodb=None):
         TableName='Scores',
         KeySchema=[
             {
-                'AttributeName': 'user',
+                'AttributeName': 'song',
                 'KeyType': 'HASH'  # Partition key
             },
             {
-                'AttributeName': 'game',
+                'AttributeName': 'user',
                 'KeyType': 'RANGE'  # Sort key
             }
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'score',
-                'AttributeType': 'N'
+                'AttributeName': 'song',
+                'AttributeType': 'S'  # String attribute type
             },
+            {
+                'AttributeName': 'user',
+                'AttributeType': 'S'  # String attribute type
+            }
         ],
         ProvisionedThroughput={
             'ReadCapacityUnits': 10,
