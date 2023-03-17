@@ -1,5 +1,5 @@
 import socket
-import thread 
+import _thread
 import pickle
 import boto3
 from boto3.dynamodb.conditions import Key
@@ -10,7 +10,7 @@ import json
 print("We're in tcp server...")
 #select an IP address and server port
 server = '0.0.0.0'
-port = 12000
+port = 10005
 
 #create a welcoming socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -78,22 +78,24 @@ def get_scores(song, dynamodb=None):
 # TODO: send index of arrow hit to both players
 def client_thread(clientsocket, addr):
     while True:
-        data = clientsocket.recv(1024).decode()
-        user, index = data[0], data[1]
-        if user == "start":
-            song = data[1]
-            scores["player0"], scores["player1"] = 0, 0
-            continue
+        rec_data = clientsocket.recv(1024).decode('utf-8')
+        data = json.loads(rec_data)
+        print(data)
+        user, label = data[0], data[1]
+        if label == "_songname":
+            song = data[0]
+        if label == "_user":
+            scores[user] = 0
         #if game has finished
         elif user == "stop":
             #insert score into database
             response = store_score(song, user, scores[user], 0)
+            del scores[user]
             #retrieve top 5 highest scores for that song and send it to every client
             top_scores = get_scores(song)
             data = json.dumps(top_scores)
             for client in client_sockets:
                 client.send(bytes(data, encoding="utf-8"))
-            
         else:
             scores[user] += 1
             #update clients with scores
@@ -105,6 +107,7 @@ def client_thread(clientsocket, addr):
 
 #Now the main server loop 
 while True:
-    connection_socket, caddr = server_socket.accept() 
+    connection_socket, caddr = server_socket.accept()
+    print() 
     client_sockets.add(connection_socket)
-    thread.start_new_thread(client_thread, (connection_socket, caddr))
+    _thread.start_new_thread(client_thread, (connection_socket, caddr))
