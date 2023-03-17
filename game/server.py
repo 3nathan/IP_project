@@ -6,6 +6,7 @@ from boto3.dynamodb.conditions import Key
 import json
 #install these libraries on server !!!!!!!!!!!!!
 
+lobby = list()
 
 print("We're in tcp server...")
 #select an IP address and server port
@@ -35,9 +36,6 @@ print('Server running on port ', port)
 ### at the end of loop
 # store entries in database
 # return to client top 5 scores for the song
-
-
-
 
 #keep track of clients
 client_sockets = set()
@@ -70,9 +68,9 @@ def get_scores(song, dynamodb=None):
     )
     scores = []
     for item in response['Items']:
-        scores.append((item['user', item['info']['score']]))
+        scores.append((item['user'], item['info']['score']))
     upto = min(5, len(scores))
-    return scores.sort(by = lambda x: x[1])[:upto]
+    return scores.sort(key = lambda x: x[1])[:upto]
 
 
 # TODO: send index of arrow hit to both players
@@ -84,10 +82,16 @@ def client_thread(clientsocket, addr):
         user, label = data[0], data[1]
         if label == "_songname":
             song = data[0]
-        if label == "_user":
-            scores[user] = 0
         #if game has finished
-        elif user == "stop":
+        elif label == "_user":
+            global lobby
+            lobby.append(user)
+        elif label == "_retreive":
+            global lobby
+            lobby_data = json.dumps(lobby)
+            for client in client_sockets:
+                client.send(bytes(lobby_data, encoding="utf-8"))
+        elif label == "_stop":
             #insert score into database
             response = store_score(song, user, scores[user], 0)
             del scores[user]
@@ -96,12 +100,13 @@ def client_thread(clientsocket, addr):
             data = json.dumps(top_scores)
             for client in client_sockets:
                 client.send(bytes(data, encoding="utf-8"))
+                global lobby
+                lobby.clear()
         else:
-            scores[user] += 1
             #update clients with scores
-            data = json.dumps(scores)
+            client_data = json.dumps(data)
             for client in client_sockets:
-                client.send(bytes(data, encoding="utf-8"))
+                client.send(bytes(client_data, encoding="utf-8"))
     clientsocket.close()
 
 
