@@ -10,7 +10,7 @@ class Score():
         self.font = pygame.font.SysFont('arielblack', 35)
         self.multiplier = 1
 
-    def draw(self, screen):
+    def draw(self):
         x = self.game.screenWidth / 15 + self.game.screenWidth / 2 * self.playerNumber
         y = self.game.screenHeight / 18
         if self.multiplier == 1:

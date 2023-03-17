@@ -60,7 +60,7 @@ class Song(State):
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
         for arrow in self.arrows:
-            arrow.draw(self.game.screen)
+            arrow.draw()
         for score in self.scores:
-            score.draw(self.game.screen)
+            score.draw()
         pygame.display.update()

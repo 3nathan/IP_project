@@ -15,6 +15,9 @@ class Menu(State):
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return
+        # when player 1 chooses the song, the path to the audio and arrow
+        # files are sent to the server so that the other player plays the
+        # same song
         pressed = self.button.update()
         if pressed:
             newState = Song(self.game)

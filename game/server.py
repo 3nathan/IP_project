@@ -3,6 +3,7 @@ import thread
 import pickle
 import boto3
 from boto3.dynamodb.conditions import Key
+import json
 #install these libraries on server !!!!!!!!!!!!!
 
 
@@ -89,14 +90,16 @@ def client_thread(clientsocket, addr):
             response = store_score(song, user, scores[user], 0)
             #retrieve top 5 highest scores for that song and send it to every client
             top_scores = get_scores(song)
+            data = json.dumps(top_scores)
             for client in client_sockets:
-                client.sendall(top_scores)
+                client.send(bytes(data, encoding="utf-8"))
             
         else:
             scores[user] += 1
             #update clients with scores
+            data = json.dumps(scores)
             for client in client_sockets:
-                client.sendall(scores)
+                client.send(bytes(data, encoding="utf-8"))
     clientsocket.close()
 
 

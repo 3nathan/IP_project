@@ -15,8 +15,9 @@ class Arrow():
         # index used to tell which arrows have been hit for opponent
         self.index = index
         self.alive = 1
+        self.hit = 0
         self.miss = 0
-        self.visible = 0
+        self.visible = 1
         self.__determineColour()
 
     def __determineColour(self):
@@ -48,39 +49,28 @@ class Arrow():
         else:
             self.visible = 0
     
-    #def __calculateScore(self, currentTime):
-    #    if currentTime - self.arriveTime > self.state.sensitivity:
-    #        # this is a miss, points are 0
-    #        # could also use this to decrease the score
-    #        # because it is a miss
-    #        self.miss = 1
-    #    elif currentTime - self.arriveTime >= -self.state.sensitivity:
-    #        # this is a hit, points are maximal if
-    #        # current time - arrive time is small
-    #        self.alive = 0
-
     def __calculateHit(self, currentTime, pressedKeys):
         if currentTime - self.arriveTime > self.state.sensitivity:
             self.miss = 1
 
         elif currentTime - self.arriveTime >= -self.state.sensitivity:
             if pressedKeys[K_LEFT] and self.direction == 0:
+                self.hit = 1
                 self.alive = 0
             if pressedKeys[K_UP] and self.direction == 1:
+                self.hit = 1
                 self.alive = 0
             if pressedKeys[K_DOWN] and self.direction == 2:
+                self.hit = 1
                 self.alive = 0
             if pressedKeys[K_RIGHT] and self.direction == 3:
+                self.hit = 1
                 self.alive = 0
 
-
-    def isAlive(self):
-        return self.alive
-
-    def draw(self, screen):
-        if self.alive and self.visible:
+    def draw(self):
+        if not self.hit and self.visible:
             self.rect = (self.x, self.y, self.game.screenWidth/32, self.game.screenWidth/32)
-            pygame.draw.rect(screen, self.colour, self.rect)
+            pygame.draw.rect(self.game.screen, self.colour, self.rect)
 
     # deadArrow is the list: [player, index] of an opponent arrow
     # that has been hit
@@ -89,18 +79,20 @@ class Arrow():
         # correct arrow
         for deadArrow in deadArrows:
             if self.player == deadArrow[0] and self.index == deadArrow[1]:
-                self.alive = 0
+                self.hit = 1
 
-        if self.alive:
+        if self.alive or self.miss:
             self.__calculatePosition(currentTime)
 
+        if self.alive:
             if self.speed and self.host:
                 self.__calculateHit(currentTime, pressedKeys)
                 
-                if not self.alive:
+                if not self.alive and not self.miss:
                     # 3rd index 1 if hit, 0 if miss
                     return [self.player, self.index, 1]
                 elif self.miss:
+                    self.alive = 0
                     return [self.player, self.index, 0]
 
         return 0
