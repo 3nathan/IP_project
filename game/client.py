@@ -54,41 +54,43 @@ screenWidth = 1280
 screenHeight = 720
 screen = pygame.display.set_mode([screenWidth, screenHeight])
 
-#functuion for accessing the server 
-def __init__(self):
+class Network:
+    #functuion for accessing the server
+    def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server = "10.11.250.207"
+        self.server = "127.0.0.1"
         self.port = 12000
         self.addr = (self.server, self.port)
         self.p = self.connect()
-       
-
-#calls the connect function
-def getP(self):
+    
+    #calls the connect function
+    def getP(self):
         return self.p
 
-#standard TCP connection function that returns the received message
-def connect(self):
-    try:
-        self.client.connect(self.addr)
-        return self.client.recv(2048).decode()
-    except:
-        pass
-#fuction that sends the data to the server and receives pickled data
-def sendf(self, data):
-    try:
-        self.client.send(str.encode(data))
-        return pickle.loads(self.client.recv(2048*2))
-    except socket.error as e:
-        print(e)
-def sendm(self, data):
-    try:
-        msg = data
-        self.client.send(msg.encode(data))
-        msg_received = self.client.recv(1024)
-        print("player 2" , msg_received.decode())
-    except socket.error as e:
-        print(e)
+    #standard TCP connection function that returns the received message    
+    def connect(self):
+        try:
+            self.client.connect(self.addr)
+            return self.client.recv(2048).decode()
+        except:
+            pass
+    #fuction that sends the data to the server and receives pickled data
+    def sendf(self, data):
+        try:
+            self.client.send(str.encode(data))
+            return pickle.loads(self.client.recv(2048*2))
+        except socket.error as e:
+            print(e)
+    
+  # send a message 
+    def sendm(self, data):
+        try:
+            msg = data
+            self.client.send(msg.encode(data))
+            msg_received = self.client.recv(1024)
+            print("player 2" , msg_received.decode())
+        except socket.error as e:
+            print(e)
 
 
 
@@ -112,24 +114,35 @@ def updateScreen(screen, arrows):
         arrow.draw(screen)
     pygame.display.update()
 
-
+n = Network()
 def main():
     run = True
     clock = pygame.time.Clock()
-    player = int(getP())
+    player = int(n.getP())
     print("You are player", player)
 
     while run:
         clock.tick(120)
         #message version
-        sendm(score)
+        n.sendm(score)
+        
         #receives the data for the game 
         try:
-            game = sendf("get")
+            game = n.sendf("get")
         except:
             run = False
             print("Couldn't get game")
             break
+
+        if game.reset()==0:
+            pygame.time.delay(5000)
+            try:
+                game = n.sendf("reset")
+            except:
+                run = False
+                print("Couldn't get game")
+                break
+        
 
     
         for event in pygame.event.get():
