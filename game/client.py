@@ -2,7 +2,7 @@ import socket
 import pickle
 import json
 
-class Network:
+class Client:
     #functuion for accessing the server
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,19 +31,21 @@ class Network:
             #print(e)
     
   # send a message 
-    def sendm(self, data):
-        try:
-            msg = data
-            self.client.send(msg.encode(data))
-            msg_received = self.client.recv(1024) #we can add the decode in this line
-            msg_received = msg_received.decode()
-        except socket.error as e:
-            print(e)
+    def send_message(self, data):
+            msg = json.dumps(data)
+            self.client.send(bytes(msg, encoding = "utf-8"))
+      
+
+    def receive_message(self):
+        msg_received = self.client.recv(1024) #we can add the decode in this line
+        msg_received = msg_received.decode()
+        return msg_received
     
-    def receive(self,):
-        data = self.client.recv(1024)
-        data_str = data.decode('utf-8')
-        scores = json.loads(data_str)
+    def receive_json(self):
+        data = self.client.recv(1024).decode('utf-8')
+        scores = json.loads(data)
+        return scores
+
 
 
 
