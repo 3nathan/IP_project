@@ -10,8 +10,13 @@ class Menu(State):
         buttonY = self.game.screenHeight*5/7
         buttonWidth = self.game.screenWidth/5
         buttonHeight = self.game.screenHeight/8
-        self.button = Button(game, 'Go to song', buttonX, buttonY, buttonWidth, buttonHeight, 50)
         # get players from the server
+        self.players = [['Player 1', 1], ['Player 2', 0]]
+        if self.players[0][1]:
+            buttonText = 'Go to song'
+        else:
+            buttonText = 'Ready'
+        self.button = Button(game, buttonText, buttonX, buttonY, buttonWidth, buttonHeight, 50)
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return

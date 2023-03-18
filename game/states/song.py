@@ -14,7 +14,6 @@ class Song(State):
         self.path = 'test_arrows'
         self.__getData()
         self.__loadData()
-        
 
     def __getData(self):
         f = open(self.path, 'r')
@@ -43,11 +42,17 @@ class Song(State):
 
     def updateObjects(self, pressedKeys):
         # change this when integrating the server
+        recievedArrows =[]
         deadArrows = []
         missedArrows = []
+        for arrow in recievedArrows:
+            if arrow[2] == 1:
+                deadArrows.append(arrow)
+            else:
+                missedArrows.append(arrow)
         currentTime = pygame.time.get_ticks()/1000
         for arrow in self.arrows:
-            arrowData = arrow.update(pressedKeys, deadArrows, currentTime)
+            arrowData = arrow.update(pressedKeys, deadArrows, missedArrows, currentTime)
             if arrowData:
                 if arrowData[2] == 1:
                     deadArrows.append(arrowData[:-1])

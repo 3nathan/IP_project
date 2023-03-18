@@ -3,9 +3,7 @@ from states.state import State
 from states.menu import Menu
 from objects.button import Button
 from objects.input_text import InputText
-from client import Client
 
-client=Client()
 class Title(State):
     def __init__(self, game):
         State.__init__(self, game)
@@ -46,7 +44,6 @@ class Title(State):
         pressed = self.button.update()
         if pressed:
             print('Player name:', self.text)
-            client.
         # enter menu state upon user pressing return
         # and send self.text (player name) to the server
             newState = Menu(self.game)

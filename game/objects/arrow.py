@@ -74,17 +74,22 @@ class Arrow():
 
     # deadArrow is the list: [player, index] of an opponent arrow
     # that has been hit
-    def update(self, pressedKeys, deadArrows, currentTime):
+    def update(self, pressedKeys, deadArrows, missedArrows, currentTime):
         # if there is a dead arrow and its not the host arrow, kill the
         # correct arrow
         for deadArrow in deadArrows:
             if self.player == deadArrow[0] and self.index == deadArrow[1]:
                 self.hit = 1
 
-        if self.alive or self.miss:
+        for missedArrow in missedArrows:
+            if self.player == missedArrow[0] and self.index == missedArrow[1]:
+                self.miss = 1
+
+        if self.miss:
             self.__calculatePosition(currentTime)
 
         if self.alive:
+            self.__calculatePosition(currentTime)
             if self.speed and self.host:
                 self.__calculateHit(currentTime, pressedKeys)
                 

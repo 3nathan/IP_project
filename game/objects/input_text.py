@@ -21,7 +21,7 @@ class InputText():
 
     def draw(self):
         text = self.font.render(self.text, False, self.colour)
-        self.game.screen.blit(text, (self.x - len(self.text)*self.size*16/100, self.y))
+        self.game.screen.blit(text, (self.x - len(self.text)*self.size*14/100, self.y))
 
     def update(self):
         self.__getInput()
