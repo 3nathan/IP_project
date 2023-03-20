@@ -12,7 +12,7 @@ class Song(State):
         # get players from server
         self.players = [['Player 1', 1], ['Player 2', 0]]
         # get path from the server
-        self.path = 'test'
+        self.path = 'Gangnam Style'
         self.__getData()
         self.__loadData()
         self.startTime = pygame.time.get_ticks()/1000
