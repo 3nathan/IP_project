@@ -11,8 +11,10 @@ class Menu(State):
         buttonWidth = self.game.screenWidth/5
         buttonHeight = self.game.screenHeight/8
         # get players from the server
-        self.players = [['Player 1', 1], ['Player 2', 0]]
-        if self.players[0][1]:
+        self.message = [0, '_retreive']
+        # send message to server and retreive the list of players
+        self.players = ['Player 1', 'Player 2']
+        if self.players[0] == self.game.name:
             buttonText = 'Go to song'
         else:
             buttonText = 'Ready'
@@ -23,7 +25,14 @@ class Menu(State):
         # when player 1 chooses the song, the path to the audio and arrow
         # files are sent to the server so that the other player plays the
         # same song
+        if len(self.players) == 1:
+            # send self.message to server and retrieve the list of players
+            pass
+        elif self.players[0] == self.game.name:
+            pass
+            # receive song message from the server
         pressed = self.button.update()
+
         if pressed:
             newState = Song(self.game)
             newState.enterState()
@@ -33,3 +42,5 @@ class Menu(State):
         # finish this by displaying the players' names and if they are ready
         self.button.draw()
         pygame.display.update()
+        
+

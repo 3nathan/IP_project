@@ -14,6 +14,7 @@ class Song(State):
         self.path = 'test_arrows'
         self.__getData()
         self.__loadData()
+        self.startTime = pygame.time.get_ticks()/1000
 
     def __getData(self):
         f = open(self.path, 'r')
@@ -24,6 +25,8 @@ class Song(State):
             self.arrowData[i] = self.arrowData[i].split(' ')
             for j in range(3):
                 self.arrowData[i][j] = float(self.arrowData[i][j])
+        self.endTime = self.arrowData[-1][1]
+        print(self.endTime)
     
         f.close()
 
@@ -61,6 +64,11 @@ class Song(State):
         # change this when integrating the server
         for score in self.scores:
             score.update(deadArrows, missedArrows)
+
+        if currentTime - self.startTime > self.endTime + 5:
+            #newState = LeaderBoard(self.game)
+            #newState.enterState()
+            print('go to leaderboard')
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))

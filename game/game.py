@@ -13,6 +13,8 @@ class Game():
         self.running = True
         self.stateStack = []
         self.__loadStates()
+        self.name = ''
+        self.song = 0
 
     def __updateEvents(self):
         self.events = pygame.event.get()

@@ -7,6 +7,7 @@ from objects.input_text import InputText
 class Title(State):
     def __init__(self, game):
         State.__init__(self, game)
+        self.game.song = 0
 
         buttonX = self.game.screenWidth/2
         buttonY = self.game.screenHeight*5/7
@@ -40,12 +41,15 @@ class Title(State):
 
     def updateObjects(self, pressedKeys):
         self.text = self.inputText.update()
+        self.game.name = self.text
 
         pressed = self.button.update()
         if pressed:
             print('Player name:', self.text)
         # enter menu state upon user pressing return
         # and send self.text (player name) to the server
+            message = [self.text, '_user']
+            
             newState = Menu(self.game)
             newState.enterState()
 
