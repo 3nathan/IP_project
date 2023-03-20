@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from states.state import State
+from states.leaderboard import LeaderBoard
 from objects.arrow import Arrow
 from objects.score import Score
 
@@ -11,13 +12,13 @@ class Song(State):
         # get players from server
         self.players = [['Player 1', 1], ['Player 2', 0]]
         # get path from the server
-        self.path = 'test_arrows'
+        self.path = 'test'
         self.__getData()
         self.__loadData()
         self.startTime = pygame.time.get_ticks()/1000
 
     def __getData(self):
-        f = open(self.path, 'r')
+        f = open('assets/' + self.path + '/arrows', 'r')
         self.arrowData = f.read()
         self.arrowData = self.arrowData.split('\n')
         self.arrowData.remove('')
@@ -27,6 +28,8 @@ class Song(State):
                 self.arrowData[i][j] = float(self.arrowData[i][j])
         self.endTime = self.arrowData[-1][1]
         print(self.endTime)
+        pygame.mixer.music.load("assets/" + self.path + '/music.mp3')
+        pygame.mixer.music.play()
     
         f.close()
 
@@ -57,6 +60,7 @@ class Song(State):
         for arrow in self.arrows:
             arrowData = arrow.update(pressedKeys, deadArrows, missedArrows, currentTime)
             if arrowData:
+                # send arrow data to server
                 if arrowData[2] == 1:
                     deadArrows.append(arrowData[:-1])
                 else:
@@ -66,9 +70,9 @@ class Song(State):
             score.update(deadArrows, missedArrows)
 
         if currentTime - self.startTime > self.endTime + 5:
-            #newState = LeaderBoard(self.game)
-            #newState.enterState()
-            print('go to leaderboard')
+            print('leaderboard')
+            newState = LeaderBoard(self.game)
+            newState.enterState()
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
