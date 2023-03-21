@@ -13,18 +13,20 @@ class Fpga():
         self.__cleanFpgaData()
 
     def __send(self):
-        self.n_terminal.stdin.write(self.text)
+        self.n_terminal.stdin.write(self.text + '\n')
+        self.n_terminal.stdin.flush()
 
     def __cleanFpgaData(self):
         for i in range(4):
-            self.n_terminal.stdout.readline().strip()
-            self.n_terminal.stdin.flush()
+            print(self.n_terminal.stdout.readline().strip())
 
     def updateKeys(self):
         #get fpga list
         self.text = 's'
         self.__send()
-        fpga = self.n_terminal.stdout.readline().strip().split('_')
+        fpga = (self.n_terminal.stdout.readline().strip().split('<-->'))[1].strip().split('_')
+        print(fpga)
+        print('got message from fpga')
         fpga[0] = int(fpga[0])
         fpga[1] = int(fpga[1])
         if fpga[0] > 100 and fpga[1] < 30 and fpga[1] > -30:
