@@ -13,7 +13,7 @@ class Game():
         self.screenWidth = 1280
         self.screenHeight = 720
         self.screen = pygame.display.set_mode([self.screenWidth, self.screenHeight])
-        self.fps = 30
+        self.fps = 60
         self.running = True
         self.stateStack = []
         self.__loadStates()
