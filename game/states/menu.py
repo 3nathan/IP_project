@@ -26,20 +26,24 @@ class Menu(State):
             gangnamX = self.game.screenWidth*2/3
             gangnamY = self.game.screenHeight/3
             self.gangnamButton = Button(game, gangnamText, gangnamX, earnedY, buttonWidth, buttonHeight, 50)
+        self.songChoice = 0
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return
         # when player 1 chooses the song, the path to the audio and arrow
         # files are sent to the server so that the other player plays the
         # same song
+        # send self.message to server and retrieve the list of players
         if len(self.players) == 1:
-            # send self.message to server and retrieve the list of players
             self.game.client.send_message(self.message)
             self.players = self.game.client.receive_json()
-            pass
+
         if self.players[0] == self.game.name:
-            self.game.song = 'Gangnam Style'
-            # receive song message from the server
+            if self.earnedButton.update():
+                self.songChoice = 1
+            elif self.gangnamButton.update():
+                self.songChoice = 2
+            pressed = self.button.update()
         else:
             self.game.client.send_message([0, '_songname'])
             song = self.game.client.receive_json()
@@ -48,14 +52,17 @@ class Menu(State):
                 newState = Song(self.game)
                 newState.enterState()
 
-        pressed = self.button.update()
+        if self.players[0] == self.game.name and len(self.players) > 1:
+            if pressed and self.songChoice:
+                if self.songChoice == 1:
+                    self.game.song = 'Earned It'
+                else self.songChoice == 2:
+                    self.game.song = 'Gangnam Style'
+                self.game.client.send_message([self.game.song, '_songname'])
+                self.game.client.receive_json()
+                newState = Song(self.game)
+                newState.enterState()
 
-        if pressed and self.players[0] == self.game.name and len(self.players) > 1:
-            print(self.players)
-            self.game.client.send_message([self.game.song, '_songname'])
-            self.game.client.receive_json()
-            newState = Song(self.game)
-            newState.enterState()
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
