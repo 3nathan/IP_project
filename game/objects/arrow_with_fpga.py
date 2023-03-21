@@ -54,7 +54,9 @@ class Arrow():
             self.miss = 1
 
         elif currentTime - self.arriveTime >= -self.state.sensitivity:
+            print("get keys")
             self.game.fpga.updateKeys()
+            print("got keys")
             if self.game.fpga.pressedKeys['left'] and self.direction == 0:
                 self.hit = 1
                 self.alive = 0
