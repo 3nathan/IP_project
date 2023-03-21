@@ -6,6 +6,7 @@ from objects.button import Button
 class Menu(State):
     def __init__(self, game):
         State.__init__(self, game)
+        self.game = game
         buttonX = self.game.screenWidth/2
         buttonY = self.game.screenHeight*5/7
         buttonWidth = self.game.screenWidth/5

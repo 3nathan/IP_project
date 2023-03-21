@@ -8,6 +8,7 @@ from objects.score_with_fgpa import Score
 class Song(State):
     def __init__(self, game):
         State.__init__(self, game)
+        self.game = game
         self.sensitivity = 0.03
         # get players from server
         self.players = [['Player 1', 1], ['Player 2', 0]]

@@ -7,6 +7,7 @@ from objects.input_text import InputText
 class Title(State):
     def __init__(self, game):
         State.__init__(self, game)
+        self.game = game
         self.game.song = 0
 
         buttonX = self.game.screenWidth/2
