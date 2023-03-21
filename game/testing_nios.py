@@ -1,6 +1,7 @@
 
 import subprocess
 import time
+import select
 
 n_terminal = subprocess.Popen(['nios2-terminal'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True)
 
@@ -12,21 +13,24 @@ def send(text):
     n_terminal.stdin.write(text + '\n')
     n_terminal.stdin.flush()
 
+# This function needs to be used in conjuction with the values being sent from the terminal constantly.
 def get_last():
     last_line = ''
     while True:
-        line = n_terminal.stdout.readline().strip()
-        print(line)
-        if line:
-            last_line = line
+        ready, _, _ = select.select([n_terminal.stdout], [], [], 0.1)
+        if ready:    
+            line = n_terminal.stdout.readline().strip()
+            # print(line)
+            if line:
+                last_line = line
         else:
             break
-    print(last_line)
     return last_line
 
 def receive_tilt():
-    tilt = send("s") # Tilt will be xtilt_ytilt
-    tilt = tilt.split('_') # This should be a list made of both tilts
+    send("s") # Tilt will be xtilt_ytilt
+    tilt = n_terminal.stdout.readline().strip()
+    tilt.split('_') # This should be a list made of both tilts
     return tilt
 
 def send_score(score):
@@ -34,18 +38,25 @@ def send_score(score):
     char_score = (6 - len(score_string)) * '0' + score_string
     send('Update_score:\ ' + char_score)
 
-start = time.time()
-for i in range(20):
-    send('s')
-    time.sleep(0.1)
+# start = time.time()
+# send('s')
 
-for i in range(20):
-    fpga = n_terminal.stdout.readline().strip()
-end = time.time()
-print(end - start)
 
-send_score(12)
-#time.sleep(0.101)
+send('a')
+output = n_terminal.stdout.readline()
+print(output.strip())
+
+send('g')
+send('l')
+time.sleep(1)
+print(get_last())
+time.sleep(0.1)
+
+send('s')
+# end = time.time()
+for i in range(50):
+    print(get_last())
+    time.sleep(0.05)
 
 
 #output = []
