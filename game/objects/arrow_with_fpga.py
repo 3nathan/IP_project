@@ -69,7 +69,7 @@ class Arrow():
             elif self.game.fpga.pressedKeys['right'] and self.direction == 3:
                 self.hit = 1
                 self.alive = 0
-            self.game.resetKeys()
+            self.game.fpga.resetKeys()
 
     def draw(self):
         if not self.hit and self.visible:
