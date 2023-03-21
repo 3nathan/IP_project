@@ -92,7 +92,8 @@ class Song(State):
             newState.enterState()
 
     def updateScreen(self):
-        self.game.screen.blit(self.background, (0, 0))
+        self.game.screen.fill((0, 0, 0))
+        self.game.screen.blit(self.background, (self.game.screenWidth/12, 0))
         for arrow in self.arrows:
             arrow.draw()
         for score in self.scores:
