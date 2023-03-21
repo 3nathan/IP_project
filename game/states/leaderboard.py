@@ -7,7 +7,7 @@ class LeaderBoard(State):
         self.game = game
         print('entered leaderboard')
         # get top five scores from server
-        self.game.client.send_message(["any", '_getscores'])
+        self.game.client.send_message(["any", "_getscores"])
         self.topScores = self.game.client.receive_json()
         self.topScoresY = []
         self.topScoresX = self.game.screenWidth/12 + self.game.screenWidth/2

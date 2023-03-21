@@ -81,7 +81,7 @@ class Song(State):
             score.update(deadArrows, missedArrows)
 
         #if currentTime - self.startTime > self.endTime + 5:
-        if currentTime - self.startTime > 15:
+        if currentTime - self.startTime > self.endTime + 5:
             self.game.scores = []
             for score in self.scores:
                 self.game.scores.append(score.getScore())

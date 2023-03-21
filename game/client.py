@@ -7,7 +7,7 @@ class Client:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server = "35.179.74.111" 
-        self.port = 10054
+        self.port = 10053
         self.addr = (self.server, self.port)
         self.p = self.connect()
     
