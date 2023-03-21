@@ -8,10 +8,12 @@ import json
 #install these libraries on server !!!!!!!!!!!!!
 
 lobby = list()
+song = 0
+foo = 0
 print("We're in tcp server...")
 #select an IP address and server port
 server = '0.0.0.0'
-port = 10048
+port = 10049
 #create a welcoming socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #bind the server to the localhost at port server_port 
@@ -57,13 +59,15 @@ def get_scores(song, dynamodb=None):
 # TODO: send index of arrow hit to both players
 def client_thread(clientsocket, addr):
     global lobby
+    global song
     while True:
         rec_data = clientsocket.recv(1024).decode('utf-8')
         data = json.loads(rec_data)
         print("thread", data)
         user, label = data[0], data[1]
         if label == "_songname":
-            song = data[0]
+            if user != 0:
+                song = data[0]
             msg = json.dumps(song)
             clientsocket.send(bytes(msg, encoding="utf-8"))
         elif label == "_user":
@@ -82,8 +86,13 @@ def client_thread(clientsocket, addr):
             print(top_scores)
             data = json.dumps(top_scores)
             clientsocket.send(bytes(data, encoding="utf-8"))
-            events.clear()
-            lobby.clear()
+            if foo:
+                song = 0
+                events.clear()
+                lobby.clear()
+            foo += 1
+            if foo == 2:
+                foo = 0
         else:
             #update clients with scores
             thisevents = events.get(user, [])
