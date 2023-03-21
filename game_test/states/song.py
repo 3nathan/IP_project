@@ -33,8 +33,9 @@ class Song(State):
                 self.arrowData[i][j] = float(self.arrowData[i][j])
         self.endTime = self.arrowData[-1][1]
         print(self.endTime)
-        pygame.mixer.music.load("assets/" + self.path + '/music.mp3')
-        pygame.mixer.music.play()
+        self.mixer = pygame.mixer.music
+        self.mixer.load("assets/" + self.path + '/music.mp3')
+        self.mixer.play()
     
         f.close()
 
@@ -79,17 +80,20 @@ class Song(State):
         for score in self.scores:
             score.update(deadArrows, missedArrows)
 
-        if currentTime - self.startTime > self.endTime + 5:
+        #if currentTime - self.startTime > self.endTime + 5:
+        if currentTime - self.startTime > 15:
             self.game.scores = []
             for score in self.scores:
-                self.game.scores.append(score.getScore)
+                self.game.scores.append(score.getScore())
 #            if self.player[0] == self.game.name:
 #                self.game.client.send_message([[self.game.name, self.game.scores[0]], '_putscore'])
 #                self.game.client.receive_json()
 #            else:
 #                self.game.client.send_message([[self.game.name, self.game.scores[1]], '_putscore'])
 #                self.game.client.receive_json()
+            self.game.players = self.players
             print('leaderboard')
+            self.mixer.stop()
             newState = LeaderBoard(self.game)
             newState.enterState()
 

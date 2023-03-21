@@ -59,15 +59,15 @@ class Menu(State):
 
         if self.players[0]:
             if pressed and self.songChoice:
-            if self.songChoice == 1:
-                self.game.song = 'Earned It'
-            else:
-                self.game.song = 'Gangnam Style'
-            print(self.players)
-#            self.game.client.send_message([self.game.song, '_songname'])
-#            self.game.client.receive_json()
-            newState = Song(self.game)
-            newState.enterState()
+                if self.songChoice == 1:
+                    self.game.song = 'Earned It'
+                else:
+                    self.game.song = 'Gangnam Style'
+                print(self.players)
+    #            self.game.client.send_message([self.game.song, '_songname'])
+    #            self.game.client.receive_json()
+                newState = Song(self.game)
+                newState.enterState()
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))

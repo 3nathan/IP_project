@@ -32,8 +32,9 @@ class Song(State):
                 self.arrowData[i][j] = float(self.arrowData[i][j])
         self.endTime = self.arrowData[-1][1]
         print(self.endTime)
-        pygame.mixer.music.load("assets/" + self.path + '/music.mp3')
-        pygame.mixer.music.play()
+        self.mixer = pygame.mixer.music
+        self.mixer.load("assets/" + self.path + '/music.mp3')
+        self.mixer.play()
     
         f.close()
 
@@ -89,6 +90,7 @@ class Song(State):
                 self.game.client.receive_json()
             print('leaderboard')
             newState = LeaderBoard(self.game)
+            self.mixer.stop()
             newState.enterState()
 
     def updateScreen(self):
