@@ -1,18 +1,19 @@
 import pygame
 from states.title import Title
 from pygame.locals import *
-import threading
+#import threading
 from client import Client
 
 class Game():
     def __init__(self):
         pygame.init()
         self.client = Client()
+        print('connected')
         self.clock = pygame.time.Clock()
         self.screenWidth = 1280
         self.screenHeight = 720
         self.screen = pygame.display.set_mode([self.screenWidth, self.screenHeight])
-        self.fps = 30
+        self.fps = 60
         self.running = True
         self.stateStack = []
         self.__loadStates()
@@ -41,19 +42,24 @@ class Game():
         self.stateStack.append(self.title)
 
     def gameLoop(self):
-        events_thread = threading.Thread(target=self.__updateEvents)
-        object_thread = threading.Thread(target=self.__updateObjects)
-        screen_thread = threading.Thread(target=self.__updateScreen)
+#        events_thread = threading.Thread(target=self.__updateEvents)
+#        object_thread = threading.Thread(target=self.__updateObjects)
+#        screen_thread = threading.Thread(target=self.__updateScreen)
+#        while self.running:
+#            #self.__updateEvents()
+#            #self.__updateObjects()
+#            #self.__updateScreen()
+#            events_thread.start()
+#            object_thread.start()
+#            screen_thread.start()
+#            events_thread.join()
+#            object_thread.join()
+#            screen_thread.join()
+#            self.clock.tick(self.fps)
         while self.running:
-            #self.__updateEvents()
-            #self.__updateObjects()
-            #self.__updateScreen()
-            events_thread.start()
-            object_thread.start()
-            screen_thread.start()
-            events_thread.join()
-            object_thread.join()
-            screen_thread.join()
+            self.__updateEvents()
+            self.__updateObjects()
+            self.__updateScreen()
             self.clock.tick(self.fps)
 
         pygame.quit()

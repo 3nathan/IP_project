@@ -7,6 +7,7 @@ class Game():
     def __init__(self):
         pygame.init()
         self.fpga = Fpga()
+        self.client = Client()
         self.clock = pygame.time.Clock()
         self.screenWidth = 1280
         self.screenHeight = 720

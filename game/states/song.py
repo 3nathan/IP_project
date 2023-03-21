@@ -20,6 +20,8 @@ class Song(State):
         self.__getData()
         self.__loadData()
         self.startTime = pygame.time.get_ticks()/1000
+        pygame.mixer.music.load("assets/" + self.path + '/music.mp3')
+        pygame.mixer.music.play()
 
     def __getData(self):
         f = open('assets/' + self.path + '/arrows', 'r')
@@ -32,8 +34,6 @@ class Song(State):
                 self.arrowData[i][j] = float(self.arrowData[i][j])
         self.endTime = self.arrowData[-1][1]
         print(self.endTime)
-        pygame.mixer.music.load("assets/" + self.path + '/music.mp3')
-        pygame.mixer.music.play()
     
         f.close()
 
