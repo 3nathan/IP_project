@@ -56,7 +56,7 @@ class Menu(State):
             if pressed and self.songChoice:
                 if self.songChoice == 1:
                     self.game.song = 'Earned It'
-                else self.songChoice == 2:
+                elif self.songChoice == 2:
                     self.game.song = 'Gangnam Style'
                 self.game.client.send_message([self.game.song, '_songname'])
                 self.game.client.receive_json()
