@@ -81,7 +81,7 @@ class Song(State):
             self.game.scores = []
             for score in self.scores:
                 self.game.scores.append(score.getScore)
-            if self.player[0] == self.game.name:
+            if self.players[0] == self.game.name:
                 self.game.client.send_message([[self.game.name, self.game.scores[0]], '_putscore'])
                 self.game.client.receive_json()
             else:
