@@ -17,12 +17,12 @@ class Title(State):
         
         self.titleFont = pygame.font.SysFont('arielblack', 100)
         self.titleText = 'Tilt Dancer'
-        self.titleX = self.game.screenWidth/2 - len(self.titleText)*20
+        self.titleX = self.game.screenWidth/2 - len(self.titleText)*17
         self.titleY = self.game.screenHeight/4 - 30
 
         self.subTitleFont = pygame.font.SysFont('arielblack', 50)
         self.subTitleText = 'Enter your name:'
-        self.subTitleX = self.game.screenWidth/2 - len(self.titleText)*9
+        self.subTitleX = self.game.screenWidth/2 - len(self.titleText)*13
         self.subTitleY = self.game.screenHeight*2/5 - 30
 
         self.inputTextX = buttonX

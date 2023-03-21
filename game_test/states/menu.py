@@ -8,7 +8,7 @@ class Menu(State):
         State.__init__(self, game)
         buttonX = self.game.screenWidth/2
         buttonY = self.game.screenHeight*5/7
-        buttonWidth = self.game.screenWidth/5
+        buttonWidth = self.game.screenWidth/4
         buttonHeight = self.game.screenHeight/8
         # get players from the server
 #        self.message = [0, '_retreive']
