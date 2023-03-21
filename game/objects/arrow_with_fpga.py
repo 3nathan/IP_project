@@ -49,14 +49,12 @@ class Arrow():
         else:
             self.visible = 0
     
-    def __calculateHit(self, currentTime, pressedKeys):
+    def __calculateHit(self, currentTime):
         if currentTime - self.arriveTime > self.state.sensitivity:
             self.miss = 1
 
         elif currentTime - self.arriveTime >= -self.state.sensitivity:
-            print("get keys")
             self.game.fpga.updateKeys()
-            print("got keys")
             if self.game.fpga.pressedKeys['left'] and self.direction == 0:
                 self.hit = 1
                 self.alive = 0
@@ -78,7 +76,7 @@ class Arrow():
 
     # deadArrow is the list: [player, index] of an opponent arrow
     # that has been hit
-    def update(self, pressedKeys, deadArrows, missedArrows, currentTime):
+    def update(self, deadArrows, missedArrows, currentTime):
         # if there is a dead arrow and its not the host arrow, kill the
         # correct arrow
         for deadArrow in deadArrows:
@@ -95,7 +93,7 @@ class Arrow():
         if self.alive:
             self.__calculatePosition(currentTime)
             if self.speed and self.host:
-                self.__calculateHit(currentTime, pressedKeys)
+                self.__calculateHit(currentTime)
                 
                 if not self.alive and not self.miss:
                     # 3rd index 1 if hit, 0 if miss

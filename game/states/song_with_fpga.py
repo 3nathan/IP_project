@@ -60,7 +60,7 @@ class Song(State):
                 missedArrows.append(arrow)
         currentTime = pygame.time.get_ticks()/1000
         for arrow in self.arrows:
-            arrowData = arrow.update(pressedKeys, deadArrows, missedArrows, currentTime)
+            arrowData = arrow.update(deadArrows, missedArrows, currentTime)
             if arrowData:
                 # send arrow data to server
                 if arrowData[2] == 1:

@@ -25,17 +25,15 @@ class Fpga():
         self.text = 's'
         self.__send()
         fpga = (self.n_terminal.stdout.readline().strip().split('<-->'))[1].strip().split('_')
-        print(fpga)
-        print('got message from fpga')
         fpga[0] = int(fpga[0])
         fpga[1] = int(fpga[1])
         if fpga[0] > 100 and fpga[1] < 30 and fpga[1] > -30:
             self.pressedKeys['left'] = 1
-        elif fpga[1] < -100 and fpga[0] > -30 and fpga[0] > 30:
+        elif fpga[1] < -100 and fpga[0] > -30 and fpga[0] < 30:
             self.pressedKeys['up'] = 1
         elif fpga[1] > 100 and fpga[0] < 30 and fpga[0] > -30:
             self.pressedKeys['down'] = 1
-        elif fpga[0] < -100 and fpga[1] < 30 and fpga[1] > 30:
+        elif fpga[0] < -100 and fpga[1] < 30 and fpga[1] > -30:
             self.pressedKeys['right'] = 1
 
     def resetKeys(self):
