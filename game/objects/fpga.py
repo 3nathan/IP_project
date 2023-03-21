@@ -25,6 +25,8 @@ class Fpga():
         self.text = 's'
         self.__send()
         fpga = self.n_terminal.stdout.readline().strip().split(' ')
+        fpga[0] = int(fpga[0])
+        fpga[1] = int(fpga[1])
         if fpga[0] > 100 and fpga[1] < 30 and fpga[1] > -30:
             self.pressedKeys['left'] = 1
         elif fpga[1] < -100 and fpga[0] > -30 and fpga[0] > 30:
