@@ -11,7 +11,7 @@ lobby = list()
 print("We're in tcp server...")
 #select an IP address and server port
 server = '0.0.0.0'
-port = 10043
+port = 10048
 #create a welcoming socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #bind the server to the localhost at port server_port 
@@ -21,7 +21,7 @@ server_socket.listen(2)
 print('Server running on port ', port)
 
 client_sockets = set()
-scores = []
+events = {}
 
 def store_score(song, user, score, dynamodb=None):
     if not dynamodb:
@@ -51,8 +51,8 @@ def get_scores(song, dynamodb=None):
         scores.append((item['user'], int(item['info']['score'])))
     print(scores)
     upto = min(5, len(scores))
-    scores.sort(key = lambda x: x[1])[:upto]
-    return scores
+    scores.sort(key = lambda x: x[1])
+    return scores[:upto]
 
 # TODO: send index of arrow hit to both players
 def client_thread(clientsocket, addr):
@@ -82,15 +82,19 @@ def client_thread(clientsocket, addr):
             print(top_scores)
             data = json.dumps(top_scores)
             clientsocket.send(bytes(data, encoding="utf-8"))
-            scores.clear()
+            events.clear()
             lobby.clear()
-
-
-
         else:
             #update clients with scores
-            scores.append(rec_data)
-            client_data = json.dumps(scores)
+            thisevents = events.get(user, [])
+            thisevents.append(label)
+            events[user] = thisevents
+            for u in lobby:
+                if u != user:
+                    otheruser = u
+            otherevents = events.get(otheruser, [])
+            client_data = json.dumps(otherevents)
+            events[otheruser] = []
             clientsocket.send(bytes(client_data, encoding="utf-8"))
     clientsocket.close()
 
