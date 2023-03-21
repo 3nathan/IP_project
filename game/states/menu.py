@@ -17,9 +17,15 @@ class Menu(State):
         self.players = self.game.client.receive_json()
         if self.players[0] == self.game.name:
             buttonText = 'Go to song'
-        else:
-            buttonText = 'Ready'
-        self.button = Button(game, buttonText, buttonX, buttonY, buttonWidth, buttonHeight, 50)
+            self.button = Button(game, buttonText, buttonX, buttonY, buttonWidth, buttonHeight, 50)
+            earnedText = 'Earned It'
+            earnedX = self.game.screenWidth/3
+            earnedY = self.game.screenHeight/3
+            self.earnedButton = Button(game, earnedText, earnedX, earnedY, buttonWidth, buttonHeight, 50)
+            gangnamText = 'Gangnam Style'
+            gangnamX = self.game.screenWidth*2/3
+            gangnamY = self.game.screenHeight/3
+            self.gangnamButton = Button(game, gangnamText, gangnamX, earnedY, buttonWidth, buttonHeight, 50)
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return
@@ -54,7 +60,10 @@ class Menu(State):
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
         # finish this by displaying the players' names and if they are ready
-        self.button.draw()
+        if self.players[0] == self.game.name:
+            self.button.draw()
+            self.earnedButton.draw()
+            self.gangnamButton.draw()
         pygame.display.update()
         
 
