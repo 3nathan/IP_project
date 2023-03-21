@@ -16,6 +16,7 @@ class Song(State):
             if player != self.game.name:
                 self.opponent = player
         self.path = self.game.song
+        self.background = pygame.image.load('assets/' + self.path + '/background.png')
         self.__getData()
         self.__loadData()
         self.startTime = pygame.time.get_ticks()/1000
