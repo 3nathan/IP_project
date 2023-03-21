@@ -24,7 +24,7 @@ class Fpga():
         #get fpga list
         self.text = 's'
         self.__send()
-        fpga = self.n_terminal.stdout.readline().strip().split(' ')
+        fpga = self.n_terminal.stdout.readline().strip().split('_')
         fpga[0] = int(fpga[0])
         fpga[1] = int(fpga[1])
         if fpga[0] > 100 and fpga[1] < 30 and fpga[1] > -30:
@@ -47,7 +47,8 @@ class Fpga():
     def updateScore(self, score):
         score_string = str(score)
         char_score = (6 - len(score_string)) * '0' + score_string
-        self.__send('Update_score:_' + char_score)
+        self.text = 'Update_score:_' + char_score
+        self.__send()
 
     def exitNios(self):
         self.n_terminal.terminate()
