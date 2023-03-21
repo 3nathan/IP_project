@@ -1,4 +1,5 @@
 import pygame
+from client import Client
 from states.state import State
 from states.song import Song
 from objects.button import Button

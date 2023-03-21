@@ -4,6 +4,7 @@ from states.state import State
 from states.leaderboard import LeaderBoard
 from objects.arrow import Arrow
 from objects.score import Score
+from client import Client
 
 class Song(State):
     def __init__(self, game):
