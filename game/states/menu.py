@@ -12,8 +12,9 @@ class Menu(State):
         buttonHeight = self.game.screenHeight/8
         # get players from the server
         self.message = [0, '_retreive']
+        self.game.client.send_message(self.message)
         # send message to server and retreive the list of players
-        self.players = ['Player 1', 'Player 2']
+        self.players = self.client.receive_json()
         if self.players[0] == self.game.name:
             buttonText = 'Go to song'
         else:
@@ -27,13 +28,25 @@ class Menu(State):
         # same song
         if len(self.players) == 1:
             # send self.message to server and retrieve the list of players
+            self.game.client.send_message(self.message)
+            self.players = self.client.receive_json()
             pass
-        elif self.players[0] == self.game.name:
-            pass
+        if self.players[0] == self.game.name:
+            self.game.song = 'Gangnam Style'
             # receive song message from the server
+        else:
+            self.game.client.send_message([0, '_songname'])
+            song = self.game.client.receive_json()
+            if song:
+                self.game.song = song
+                newState = Song(self.game)
+                newState.enterState()
+
         pressed = self.button.update()
 
-        if pressed:
+        if pressed and self.players[0] == self.game.name and len(self.players) > 1:
+            self.game.client([self.song, '_songname'])
+            self.game.client.receive_json()
             newState = Song(self.game)
             newState.enterState()
 
