@@ -24,21 +24,30 @@ def get_last():
     print(last_line)
     return last_line
 
-start = time.time()
+def receive_tilt():
+    tilt = send("send_tilt") # Tilt will be xtilt_ytilt
+    tilt = tilt.split('_') # This should be a list made of both tilts
+    return tilt
+
+def send_score(score):
+    score_string = str(score)
+    print(score_string)
+    char_score = (6 - len(score_string)) * '0' + score_string
+    print(char_score)
+    send('Upaate_score:\ ' + char_score)
+
+# start = time.time()
 for i in range(20):
     send('s')
-
-
+    time.sleep(0.1)
 
 for i in range(20):
-    line = n_terminal.stdout.readline().strip()
-end = time.time()
-print(end - start)
+    fpga = n_terminal.stdout.readline().strip()
+#end = time.time()
+#print(end - start)
 
-send('Update_score:_696969')
-
-#for i in range(20):
-#    time.sleep(0.1)
+send("Update_score:_696521")
+time.sleep(0.101)
 
 #output = []
 #for i in range(20):
