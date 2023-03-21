@@ -10,7 +10,7 @@ class Arrow():
         self.direction = self.state.arrowData[index][0]
         self.arriveTime = self.state.arrowData[index][1] + currentTime
         self.speed = self.state.arrowData[index][2]
-        self.host = self.state.players[playerNumber][1]
+        self.host = self.state.players[playerNumber] == self.game.name
         self.player = playerNumber
         # index used to tell which arrows have been hit for opponent
         self.index = index

@@ -41,14 +41,20 @@ class Title(State):
 
     def updateObjects(self, pressedKeys):
         self.text = self.inputText.update()
-        self.game.name = self.text
 
         pressed = self.button.update()
         if pressed:
             print('Player name:', self.text)
         # enter menu state upon user pressing return
         # and send self.text (player name) to the server
+            self.game.client.send_message("connecting")
+            self.game.client.receive_json()
+
             message = [self.text, '_user']
+            self.game.name = self.text
+
+            self.game.client.send_message(message)
+            self.game.client.receive_json()
             
             newState = Menu(self.game)
             newState.enterState()

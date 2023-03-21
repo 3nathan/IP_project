@@ -5,7 +5,7 @@ class Score():
         self.game = game
         self.song = song
         self.playerNumber = playerNumber
-        self.playerName = self.song.players[playerNumber][0]
+        self.playerName = self.song.players[playerNumber]
         self.score = 0
         self.font = pygame.font.SysFont('arielblack', 35)
         self.multiplier = 1
@@ -29,3 +29,6 @@ class Score():
         for arrow in missedArrows:
             if arrow[0] == self.playerNumber:
                 self.multiplier = 1
+
+    def getScore(self):
+        return self.score

@@ -10,9 +10,13 @@ class Song(State):
         State.__init__(self, game)
         self.sensitivity = 0.03
         # get players from server
-        self.players = [['Player 1', 1], ['Player 2', 0]]
-        # get path from the server
-        self.path = 'Gangnam Style'
+        self.game.client.send_message([0, '_retreive'])
+        self.players = self.game.client.receive_json()
+        for player in self.players:
+            if player != self.game.name:
+                self.opponent = player
+        self.path = self.game.song
+        self.background = pygame.image.load('assets/' + self.path + '/background.png')
         self.__getData()
         self.__loadData()
         self.startTime = pygame.time.get_ticks()/1000
@@ -48,7 +52,9 @@ class Song(State):
 
     def updateObjects(self, pressedKeys):
         # change this when integrating the server
-        recievedArrows =[]
+        # list of all arrows
+        self.game.client.send_message([self.game.name, []])
+        recievedArrows = self.game.client.receive_json()
         deadArrows = []
         missedArrows = []
         for arrow in recievedArrows:
@@ -61,6 +67,8 @@ class Song(State):
             arrowData = arrow.update(pressedKeys, deadArrows, missedArrows, currentTime)
             if arrowData:
                 # send arrow data to server
+                self.game.client.send_message([self.game.name, arrowData])
+                self.game.client.receive_json()
                 if arrowData[2] == 1:
                     deadArrows.append(arrowData[:-1])
                 else:
@@ -70,12 +78,21 @@ class Song(State):
             score.update(deadArrows, missedArrows)
 
         if currentTime - self.startTime > self.endTime + 5:
+            self.game.scores = []
+            for score in self.scores:
+                self.game.scores.append(score.getScores)
+            if self.player[0] == self.game.name:
+                self.game.client.send_message([[self.game.name, self.game.scores[0]], '_putscore'])
+                self.game.client.receive_json()
+            else:
+                self.game.client.send_message([[self.game.name, self.game.scores[1]], '_putscore'])
+                self.game.client.receive_json()
             print('leaderboard')
             newState = LeaderBoard(self.game)
             newState.enterState()
 
     def updateScreen(self):
-        self.game.screen.fill((0, 0, 0))
+        self.game.screen.blit(self.background, (0, 0))
         for arrow in self.arrows:
             arrow.draw()
         for score in self.scores:
