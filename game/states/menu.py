@@ -32,7 +32,7 @@ class Menu(State):
             self.players = self.game.client.receive_json()
             pass
         if self.players[0] == self.game.name:
-            self.game.song = 'Gangnam Style'
+            self.game.song = 'Earned It'
             # receive song message from the server
         else:
             self.game.client.send_message([0, '_songname'])
