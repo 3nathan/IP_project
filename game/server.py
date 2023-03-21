@@ -95,15 +95,17 @@ def client_thread(clientsocket, addr):
                 foo = 0
         else:
             #update clients with scores
-            thisevents = events.get(user, [])
-            thisevents.append(label)
-            events[user] = thisevents
+            if label < 3:
+                thisevents = events.get(user, [])
+                thisevents.append(label)
+                events[user] = thisevents
             for u in lobby:
                 if u != user:
                     otheruser = u
             otherevents = events.get(otheruser, [])
             client_data = json.dumps(otherevents)
-            events[otheruser] = []
+            if label > 3:
+                events[otheruser] = []
             clientsocket.send(bytes(client_data, encoding="utf-8"))
     clientsocket.close()
 

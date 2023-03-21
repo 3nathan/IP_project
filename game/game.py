@@ -1,10 +1,12 @@
 import pygame
 from states.title import Title
 from pygame.locals import *
+from client import Client
 
 class Game():
     def __init__(self):
         pygame.init()
+        self.client = Client()
         self.clock = pygame.time.Clock()
         self.screenWidth = 1280
         self.screenHeight = 720
