@@ -17,7 +17,7 @@ class Title(State):
         self.button = Button(game, 'Go to menu', buttonX, buttonY, buttonWidth, buttonHeight, 50)
         
         self.titleFont = pygame.font.SysFont('arielblack', 100)
-        self.titleText = 'FPGA Rhythm Game'
+        self.titleText = 'Tilt Dancer'
         self.titleX = self.game.screenWidth/2 - len(self.titleText)*20
         self.titleY = self.game.screenHeight/4 - 30
 
