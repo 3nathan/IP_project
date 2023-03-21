@@ -1,13 +1,21 @@
 import pygame
 from pygame.locals import *
 
-class Arrow():
+class Arrow(pygame.sprite.Sprite):
     def __init__(self, playerNumber, index, game, state, currentTime):
         self.game = game
         self.state = state
         self.x = 0
         self.y = 0
         self.direction = self.state.arrowData[index][0]
+        if self.direction == 0:
+            self.image = pygame.image.load('assets/arrows/left.png').convert()
+        if self.direction == 1:
+            self.image = pygame.image.load('assets/arrows/up.png').convert()
+        if self.direction == 2:
+            self.image = pygame.image.load('assets/arrows/down.png').convert()
+        if self.direction == 3:
+            self.image = pygame.image.load('assets/arrows/right.png').convert()
         self.arriveTime = self.state.arrowData[index][1] + currentTime
         self.speed = self.state.arrowData[index][2]
         self.host = self.state.players[playerNumber] == self.game.name
@@ -69,8 +77,9 @@ class Arrow():
 
     def draw(self):
         if not self.hit and self.visible:
-            self.rect = (self.x, self.y, self.game.screenWidth/32, self.game.screenWidth/32)
-            pygame.draw.rect(self.game.screen, self.colour, self.rect)
+            #self.rect = (self.x, self.y, self.game.screenWidth/32, self.game.screenWidth/32)
+            #pygame.draw.rect(self.game.screen, self.colour, self.rect)
+            self.game.screen.blit(self.image, (self.x, self.y))
 
     # deadArrow is the list: [player, index] of an opponent arrow
     # that has been hit
