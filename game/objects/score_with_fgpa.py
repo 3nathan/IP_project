@@ -25,7 +25,7 @@ class Score():
         for arrow in deadArrows:
             if arrow[0] == self.playerNumber:
                 self.score += self.multiplier
-                self.game.updateScore(self.score)
+                self.game.fpga.updateScore(self.score)
                 if self.multiplier < 8:
                     self.multiplier *= 2
         for arrow in missedArrows:

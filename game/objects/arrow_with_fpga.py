@@ -54,17 +54,17 @@ class Arrow():
             self.miss = 1
 
         elif currentTime - self.arriveTime >= -self.state.sensitivity:
-            self.game.updateKeys()
-            if self.pressedKeys['left'] and self.direction == 0:
+            self.game.fpga.updateKeys()
+            if self.game.fpga.pressedKeys['left'] and self.direction == 0:
                 self.hit = 1
                 self.alive = 0
-            elif self.pressedKeys['up'] and self.direction == 1:
+            elif self.game.fpga.pressedKeys['up'] and self.direction == 1:
                 self.hit = 1
                 self.alive = 0
-            elif self.pressedKeys['down'] and self.direction == 2:
+            elif self.game.fpga.pressedKeys['down'] and self.direction == 2:
                 self.hit = 1
                 self.alive = 0
-            elif self.pressedKeys['right'] and self.direction == 3:
+            elif self.game.fpga.pressedKeys['right'] and self.direction == 3:
                 self.hit = 1
                 self.alive = 0
             self.game.resetKeys()
