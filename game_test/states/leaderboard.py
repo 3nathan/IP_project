@@ -13,7 +13,7 @@ class LeaderBoard(State):
                      ['tom', 3],
                      ['jimmy', 1]]
         self.topScoresY = []
-        self.topScoresX = self.game.screenWidth/15 + self.game.screenWidth/2
+        self.topScoresX = self.game.screenWidth/12 + self.game.screenWidth/2
         self.playerScoresX = self.game.screenWidth/12
         self.playerScoresY = []
         self.font = pygame.font.SysFont('arielblack', 35)
@@ -28,11 +28,15 @@ class LeaderBoard(State):
         for i in range(len(self.topScores)):
             text = self.font.render(self.topScores[i][0] + ': ' + str(self.topScores[i][1]), False, (255, 255, 255))
             self.game.screen.blit(text, (self.topScoresX, self.topScoresY[i]))
+        text = self.font.render('Top scores of all time:', False, (255, 255, 255))
+        self.game.screen.blit(text, (self.game.screenWidth/15 + self.game.screenWidth/2, self.game.screenHeight/16))
 
     def __drawPlayerScores(self):
         for i in range(len(self.game.players)):
             text = self.font.render(self.game.players[i] + ': ' + str(self.game.scores[i]), False, (255, 255, 255))
             self.game.screen.blit(text, (self.playerScoresX, self.playerScoresY[i]))
+        text = self.font.render('Players scores:', False, (255, 255, 255))
+        self.game.screen.blit(text, (self.game.screenWidth/15, self.game.screenHeight/16))
 
     def updateObjects(self, pressedKeys):
         pass
