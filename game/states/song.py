@@ -4,7 +4,6 @@ from states.state import State
 from states.leaderboard import LeaderBoard
 from objects.arrow import Arrow
 from objects.score import Score
-from client import Client
 
 class Song(State):
     def __init__(self, game):
@@ -53,7 +52,7 @@ class Song(State):
     def updateObjects(self, pressedKeys):
         # change this when integrating the server
         # list of all arrows
-        self.game.client.send_message([0, 4])
+        self.game.client.send_message([self.game.name, []])
         recievedArrows = self.game.client.receive_json()
         deadArrows = []
         missedArrows = []

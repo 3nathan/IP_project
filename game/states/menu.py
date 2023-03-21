@@ -1,5 +1,4 @@
 import pygame
-from client import Client
 from states.state import State
 from states.song import Song
 from objects.button import Button
@@ -15,7 +14,7 @@ class Menu(State):
         self.message = [0, '_retreive']
         self.game.client.send_message(self.message)
         # send message to server and retreive the list of players
-        self.players = self.client.receive_json()
+        self.players = self.game.client.receive_json()
         if self.players[0] == self.game.name:
             buttonText = 'Go to song'
         else:
@@ -30,7 +29,7 @@ class Menu(State):
         if len(self.players) == 1:
             # send self.message to server and retrieve the list of players
             self.game.client.send_message(self.message)
-            self.players = self.client.receive_json()
+            self.players = self.game.client.receive_json()
             pass
         if self.players[0] == self.game.name:
             self.game.song = 'Gangnam Style'
@@ -46,7 +45,8 @@ class Menu(State):
         pressed = self.button.update()
 
         if pressed and self.players[0] == self.game.name and len(self.players) > 1:
-            self.game.client([self.song, '_songname'])
+            print(self.players)
+            self.game.client.send_message([self.game.song, '_songname'])
             self.game.client.receive_json()
             newState = Song(self.game)
             newState.enterState()

@@ -1,5 +1,4 @@
 import pygame
-from client import Client
 from states.state import State
 from states.menu import Menu
 from objects.button import Button
