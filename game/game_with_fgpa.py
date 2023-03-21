@@ -1,10 +1,12 @@
 import pygame
-from states.title import Title
+from states.title_with_fpga import Title
 from pygame.locals import *
+from objects.fpga import Fpga
 
 class Game():
     def __init__(self):
         pygame.init()
+        Fpga.__init__(self)
         self.clock = pygame.time.Clock()
         self.screenWidth = 1280
         self.screenHeight = 720
@@ -22,8 +24,10 @@ class Game():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     # send quit message to the server
+                    self.exitNios()
                     self.running = False
             elif event.type == pygame.QUIT:
+                self.exitNios()
                 self.running = False
 
     def __updateObjects(self):

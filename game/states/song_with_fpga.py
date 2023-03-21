@@ -3,7 +3,7 @@ from pygame.locals import *
 from states.state import State
 from states.leaderboard import LeaderBoard
 from objects.arrow_with_fpga import Arrow
-from objects.score import Score
+from objects.score_with_fgpa import Score
 
 class Song(State):
     def __init__(self, game):
