@@ -6,42 +6,69 @@ from objects.button import Button
 class Menu(State):
     def __init__(self, game):
         State.__init__(self, game)
-        self.game = game
         buttonX = self.game.screenWidth/2
         buttonY = self.game.screenHeight*5/7
-        buttonWidth = self.game.screenWidth/5
+        buttonWidth = self.game.screenWidth/4
         buttonHeight = self.game.screenHeight/8
         # get players from the server
         self.message = [0, '_retreive']
+        self.game.client.send_message(self.message)
         # send message to server and retreive the list of players
-        self.players = ['Player 1', 'Player 2']
+        self.players = self.game.client.receive_json()
         if self.players[0] == self.game.name:
             buttonText = 'Go to song'
-        else:
-            buttonText = 'Ready'
-        self.button = Button(game, buttonText, buttonX, buttonY, buttonWidth, buttonHeight, 50)
+            self.button = Button(game, buttonText, buttonX, buttonY, buttonWidth, buttonHeight, 50)
+            earnedText = 'Earned It'
+            earnedX = self.game.screenWidth/3
+            earnedY = self.game.screenHeight/3
+            self.earnedButton = Button(game, earnedText, earnedX, earnedY, buttonWidth, buttonHeight, 50)
+            gangnamText = 'Gangnam Style'
+            gangnamX = self.game.screenWidth*2/3
+            gangnamY = self.game.screenHeight/3
+            self.gangnamButton = Button(game, gangnamText, gangnamX, earnedY, buttonWidth, buttonHeight, 50)
+        self.songChoice = 0
 
     def updateObjects(self, pressedKeys):
         # enter song state upon user pressing return
         # when player 1 chooses the song, the path to the audio and arrow
         # files are sent to the server so that the other player plays the
         # same song
+        # send self.message to server and retrieve the list of players
         if len(self.players) == 1:
-            # send self.message to server and retrieve the list of players
-            pass
-        elif self.players[0] == self.game.name:
-            pass
-            # receive song message from the server
-        pressed = self.button.update()
+            self.game.client.send_message(self.message)
+            self.players = self.game.client.receive_json()
 
-        if pressed:
-            newState = Song(self.game)
-            newState.enterState()
+        if self.players[0] == self.game.name:
+            if self.earnedButton.update():
+                self.songChoice = 1
+            elif self.gangnamButton.update():
+                self.songChoice = 2
+            pressed = self.button.update()
+        else:
+            self.game.client.send_message([0, '_songname'])
+            song = self.game.client.receive_json()
+            if song:
+                self.game.song = song
+                newState = Song(self.game)
+                newState.enterState()
+
+        if self.players[0] == self.game.name and len(self.players) > 1:
+            if pressed and self.songChoice:
+                if self.songChoice == 1:
+                    self.game.song = 'Earned It'
+                elif self.songChoice == 2:
+                    self.game.song = 'Gangnam Style'
+                self.game.client.send_message([self.game.song, '_songname'])
+                self.game.client.receive_json()
+                newState = Song(self.game)
+                newState.enterState()
+
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
         # finish this by displaying the players' names and if they are ready
-        self.button.draw()
+        if self.players[0] == self.game.name:
+            self.button.draw()
+            self.earnedButton.draw()
+            self.gangnamButton.draw()
         pygame.display.update()
-        
-
