@@ -6,7 +6,7 @@ class Client:
     #functuion for accessing the server
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server = "35.179.74.111" 
+        self.server = "13.40.15.172"
         self.port = 10053
         self.addr = (self.server, self.port)
         self.p = self.connect()

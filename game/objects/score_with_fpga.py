@@ -31,3 +31,6 @@ class Score():
         for arrow in missedArrows:
             if arrow[0] == self.playerNumber:
                 self.multiplier = 1
+
+    def getScore(self):
+        return self.score
