@@ -12,6 +12,7 @@ class Song(State):
         # get players from server
         self.game.client.send_message([0, '_retreive'])
         self.players = self.game.client.receive_json()
+        self.game.players = self.players
         for player in self.players:
             if player != self.game.name:
                 self.opponent = player
