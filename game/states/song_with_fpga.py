@@ -81,7 +81,7 @@ class Song(State):
         if currentTime - self.startTime > self.endTime + 5:
             self.game.scores = []
             for score in self.scores:
-                self.game.scores.append(score.getScore)
+                self.game.scores.append(score.getScore())
             if self.players[0] == self.game.name:
                 self.game.client.send_message([[self.game.name, self.game.scores[0]], '_putscore'])
                 self.game.client.receive_json()
@@ -94,6 +94,7 @@ class Song(State):
 
     def updateScreen(self):
         self.game.screen.fill((0, 0, 0))
+        self.game.screen.blit(self.background, (self.game.screenWidth/12, 0))
         for arrow in self.arrows:
             arrow.draw()
         for score in self.scores:
