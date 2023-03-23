@@ -2,6 +2,7 @@ import pygame
 from states.title_with_fpga import Title
 from pygame.locals import *
 from objects.fpga import Fpga
+from client import Client
 
 class Game():
     def __init__(self):
